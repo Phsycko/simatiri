@@ -1,0 +1,205 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// -----------------------------------------------------------------------------
+// USER & ROLE MANAGEMENT (B2B FOCUS)
+// -----------------------------------------------------------------------------
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique // superadmin, agent_b2b, finance, client
+  description String?
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Agency {
+  id              Int      @id @default(autoincrement())
+  name            String
+  taxId           String?
+  contactEmail    String
+  contactPhone    String?
+  commissionRate  Float    @default(10.00) // Default 10%
+  users           User[]   // Agents belonging to this agency
+  reservations    Reservation[]
+  quotes          Quote[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  
+  roleId        Int
+  role          Role     @relation(fields: [roleId], references: [id])
+  
+  agencyId      Int?     // Si el usuario es un Agente de una Agencia
+  agency        Agency?  @relation(fields: [agencyId], references: [id])
+  
+  // Si el usuario es un Cliente Final directo
+  reservations  Reservation[] 
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// PRODUCT CATALOG: SIMATIRI EXPERIENCE (CHEPE, TOURS, HOTELS)
+// -----------------------------------------------------------------------------
+
+model Destination {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique // Chihuahua, Creel, Divisadero, El Fuerte, Los Mochis
+  description String?
+  tours       Tour[]
+  hotels      Hotel[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// --- Paquetes Turísticos ---
+model Package {
+  id              Int       @id @default(autoincrement())
+  title           String
+  durationDays    Int
+  trainClass      String?   // CHEPE EXPRESS, CHEPE REGIONAL
+  startLocation   String?
+  endLocation     String?
+  description     String?
+  prices          PackageOccupancyPrice[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model PackageOccupancyPrice {
+  id              Int       @id @default(autoincrement())
+  packageId       Int
+  package         Package   @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  occupancyType   String    // DOBLE, TRIPLE, CUADRUPLE
+  isUpgrade       Boolean   @default(false) // Si es precio Upgrade Express
+  pricePerPerson  Float     // SQLite mapping
+}
+
+// --- Tours Individuales con Precio Escalonado ---
+model Tour {
+  id              Int             @id @default(autoincrement())
+  destinationId   Int
+  destination     Destination     @relation(fields: [destinationId], references: [id])
+  title           String          // Tour Tarahumara, Barrancas del Cobre
+  durationHours   Int
+  description     String?
+  tierPrices      TourTierPrice[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model TourTierPrice {
+  id              Int       @id @default(autoincrement())
+  tourId          Int
+  tour            Tour      @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  minPax          Int       // ej. 1
+  maxPax          Int       // ej. 2
+  pricePerPerson  Float     // Precio escalonado dependiente del volumen
+}
+
+// --- Hospedaje Simatiri Hotel y Red de Aliados ---
+model Hotel {
+  id              Int       @id @default(autoincrement())
+  destinationId   Int
+  destination     Destination @relation(fields: [destinationId], references: [id])
+  name            String
+  inclusions      String?   // Ej. "desayuno caliente, fogatas"
+  roomTypes       RoomType[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model RoomType {
+  id              Int       @id @default(autoincrement())
+  hotelId         Int
+  hotel           Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  name            String    // Doble, Triple, Cuadruple, Cabaña Equipada, 10 Personas
+  capacity        Int
+  seasonRates     HotelSeasonRate[]
+}
+
+model HotelSeasonRate {
+  id              Int       @id @default(autoincrement())
+  roomTypeId      Int
+  roomType        RoomType  @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  season          String    // LOW, HIGH, o STD (Standard)
+  priceAgency     Float     // Precio NETO para la Agencia (ej. 950)
+  pricePublic     Float     // Precio CON IMPUESTOS al público (ej. 1140)
+}
+
+// -----------------------------------------------------------------------------
+// OPERATIONS: RESERVATIONS, QUOTES & PASSENGERS
+// -----------------------------------------------------------------------------
+
+model Reservation {
+  id                Int       @id @default(autoincrement())
+  agencyId          Int?      // Si fue vendido por Agencia B2B
+  agency            Agency?   @relation(fields: [agencyId], references: [id])
+  
+  directCustomerId  Int?      // Si fue venta directa B2C
+  user              User?     @relation(fields: [directCustomerId], references: [id])
+  
+  status            String    // Pending, Confirmed_Deposit, Confirmed_Full, Cancelled
+  dates             String?   // Fechas de viaje
+  
+  totalPublicPrice  Float     
+  agencyCommission  Float     @default(0.0) 
+  netSimatiri       Float     // totalPublic Price - agencyCommission
+  
+  paidAmount        Float     @default(0.0) 
+  
+  passengers        ReservationPassenger[]
+  payments          Payment[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model ReservationPassenger {
+  id              Int         @id @default(autoincrement())
+  reservationId   Int
+  reservation     Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  firstName       String
+  lastName        String
+  age             Int         // Importante para aplicar 50% descuento (5-10 años)
+}
+
+model Quote {
+  id                Int       @id @default(autoincrement())
+  agencyId          Int?
+  agency            Agency?   @relation(fields: [agencyId], references: [id])
+  status            String    // Draft, Sent, Accepted, Rejected
+  snapshotData      String    // JSON string for SQLite rather than Json column type which SQLite Prisma mapping complains about
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Payment {
+  id              Int         @id @default(autoincrement())
+  reservationId   Int
+  reservation     Reservation @relation(fields: [reservationId], references: [id])
+  amount          Float     
+  method          String      // Card, Transfer, Cash
+  status          String      // Pending, Completed, Failed
+  isFullPayment   Boolean     @default(false) // Política: 20 días antes grupos, 5 días indiv
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}

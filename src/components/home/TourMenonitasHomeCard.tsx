@@ -1,0 +1,46 @@
+"use client"
+
+import { useState } from 'react'
+import { MapPin } from 'lucide-react'
+import { TourMenonitasModal } from '@/components/experiences/TourMenonitasModal'
+
+export function TourMenonitasHomeCard({ tour }: { tour: any }) {
+    const [isOpen, setIsOpen] = useState(false)
+
+    return (
+        <>
+            <div
+                onClick={() => setIsOpen(true)}
+                className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 text-left w-full"
+            >
+                <div className="aspect-video bg-gradient-to-br from-[#0a192f] to-[#2e4a3d] relative">
+                    <div className="absolute inset-0 block">
+                        <img
+                            src="/images/destinations/cuauhtemoc.jpg"
+                            alt="Tour Menonitas"
+                            className="w-full h-full object-cover mix-blend-overlay opacity-50"
+                            onError={(e) => {
+                                e.currentTarget.src = '/images/destinations/creel.jpg'
+                            }}
+                        />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center relative z-10">
+                        <MapPin className="text-white/20" size={48} strokeWidth={1} />
+                    </div>
+                </div>
+                <div className="p-6">
+                    <h3 className="font-serif text-xl text-[#0a192f] mb-2 group-hover:text-[#2e4a3d] transition-colors">Tour Menonitas</h3>
+                    <p className="text-sm text-gray-500 mb-4">5 – 6 Horas de experiencia</p>
+                    <div className="flex justify-between items-center border-t border-gray-100 pt-4">
+                        <span className="text-xs text-gray-400">Por persona</span>
+                        <span className="font-bold text-[#7B4B2A]">
+                            Desde $1,300.00 MXN
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <TourMenonitasModal isOpen={isOpen} setIsOpen={setIsOpen} tour={tour} />
+        </>
+    )
+}
