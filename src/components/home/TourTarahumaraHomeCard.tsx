@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { MapPin } from 'lucide-react'
 import { TourTarahumaraModal } from '@/components/experiences/TourTarahumaraModal'
+import Image from 'next/image';
 
 export function TourTarahumaraHomeCard({ tour }: { tour: any }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -15,7 +16,7 @@ export function TourTarahumaraHomeCard({ tour }: { tour: any }) {
             >
                 <div className="aspect-video bg-gradient-to-br from-[#0a192f] to-[#2e4a3d] relative">
                     <div className="absolute inset-0 block">
-                        <img src="/images/destinations/creel.jpg" alt="Tour Tarahumara" className="w-full h-full object-cover mix-blend-overlay opacity-50" onError={(e) => { e.currentTarget.style.display = 'none' }} />
+                        <Image src="/images/destinations/creel.jpg" alt="Tour Tarahumara" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-full object-cover mix-blend-overlay opacity-50" />
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center relative z-10">
                         <MapPin className="text-white/20" size={48} strokeWidth={1} />

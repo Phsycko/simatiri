@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Train, Star, MapPin, Users } from 'lucide-react'
 import { prisma } from '@/lib/db/prisma'
 import RouteExperienceSection from '@/components/home/RouteExperienceSection'
@@ -42,13 +43,16 @@ export default async function HomePage() {
       {/* HERO */}
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#071422]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('/images/hero-background-drive.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
       >
+        <Image
+          src="/images/hero-background-drive.png"
+          alt="Sierra Tarahumara"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover -z-20"
+        />
+        <div className="absolute inset-0 bg-black/55 pointer-events-none -z-10" />
         {/* Dot grid texture */}
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -154,25 +158,25 @@ export default async function HomePage() {
             >
               <div
                 className={pkg.id === 1 || pkg.title.toLowerCase().includes('paquete 1') || pkg.id === 2 || pkg.title.toLowerCase().includes('paquete 2') || pkg.id === 3 || pkg.title.toLowerCase().includes('paquete 3') ? "aspect-[4/3] rounded-2xl overflow-hidden relative mb-5" : "aspect-[4/3] bg-gradient-to-br from-[#2e4a3d] to-[#0a192f] rounded-2xl overflow-hidden relative mb-5"}
-                style={
-                  pkg.id === 1 || pkg.title.toLowerCase().includes('paquete 1') ? {
-                    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 100%), url('/images/paquetes/paquete-1-hero.jpg')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
-                  } : pkg.id === 2 || pkg.title.toLowerCase().includes('paquete 2') ? {
-                    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 100%), url('/images/packages/package-2.jpg')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
-                  } : pkg.id === 3 || pkg.title.toLowerCase().includes('paquete 3') ? {
-                    backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 100%), url('/images/packages/package-3.jpg')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
-                  } : {}
-                }
               >
+                {(pkg.id === 1 || pkg.title.toLowerCase().includes('paquete 1')) && (
+                  <>
+                    <Image src="/images/paquetes/paquete-1-hero.jpg" alt={pkg.title} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/55 pointer-events-none" />
+                  </>
+                )}
+                {(pkg.id === 2 || pkg.title.toLowerCase().includes('paquete 2')) && (
+                  <>
+                    <Image src="/images/packages/package-2.jpg" alt={pkg.title} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/55 pointer-events-none" />
+                  </>
+                )}
+                {(pkg.id === 3 || pkg.title.toLowerCase().includes('paquete 3')) && (
+                  <>
+                    <Image src="/images/packages/package-3.jpg" alt={pkg.title} fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/55 pointer-events-none" />
+                  </>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity group-hover:opacity-90" />
                 <div className="absolute bottom-5 left-5 right-5">
                   <span className="text-[10px] text-[#7B4B2A] uppercase tracking-widest font-semibold">{pkg.trainClass}</span>

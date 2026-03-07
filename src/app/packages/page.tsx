@@ -12,7 +12,6 @@ export default async function PackagesPage() {
     return (
         <>
             <PageHero
-                label="Paquetes CHEPE"
                 title="Circuitos completos por la Sierra"
                 subtitle="Desde 3 hasta 7 días. Todo incluido: tren, hospedaje, tours y traslados. Disponibles en CHEPE Express y Regional."
                 size="md"

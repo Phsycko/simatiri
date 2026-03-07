@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { MapPin } from 'lucide-react'
 import { TourRecowataModal } from '@/components/experiences/TourRecowataModal'
+import Image from 'next/image';
 
 export function TourRecowataHomeCard({ tour }: { tour: any }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -15,14 +16,7 @@ export function TourRecowataHomeCard({ tour }: { tour: any }) {
             >
                 <div className="aspect-video bg-gradient-to-br from-[#0a192f] to-[#2e4a3d] relative">
                     <div className="absolute inset-0 block">
-                        <img
-                            src="/images/destinations/recowata.jpg"
-                            alt="Tour Recowata"
-                            className="w-full h-full object-cover mix-blend-overlay opacity-50"
-                            onError={(e) => {
-                                e.currentTarget.src = '/images/destinations/creel.jpg'
-                            }}
-                        />
+                        <Image src="/images/destinations/recowata.jpg" alt="Tour Recowata" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-full object-cover mix-blend-overlay opacity-50" />
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center relative z-10">
                         <MapPin className="text-white/20" size={48} strokeWidth={1} />

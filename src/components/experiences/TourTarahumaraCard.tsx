@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Clock, ArrowRight, Users } from 'lucide-react'
 import { TourTarahumaraModal } from './TourTarahumaraModal'
+import Image from 'next/image';
 
 export function TourTarahumaraCard({ tour }: { tour: any }) {
     const [isOpen, setIsOpen] = useState(false)
@@ -16,7 +17,7 @@ export function TourTarahumaraCard({ tour }: { tour: any }) {
             >
                 <div className="aspect-[4/3] bg-gradient-to-br from-[#2e4a3d] to-[#0a192f] relative">
                     <div className="absolute inset-0 block">
-                        <img src="/images/destinations/creel.jpg" alt="Tour Tarahumara" className="w-full h-full object-cover mix-blend-overlay opacity-50" onError={(e) => { e.currentTarget.style.display = 'none' }} />
+                        <Image src="/images/destinations/creel.jpg" alt="Tour Tarahumara" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-full object-cover mix-blend-overlay opacity-50" />
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent h-32" />
                     <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white/90 text-xs font-medium">

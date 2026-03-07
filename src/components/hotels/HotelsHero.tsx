@@ -1,14 +1,18 @@
 import React from 'react'
+import Image from 'next/image'
 
 export function HotelsHero() {
     return (
         <section className="relative w-full bg-[#1C1812] px-8 py-32 lg:py-48 flex items-center justify-center overflow-hidden">
             {/* Background Image / Texture overlay */}
             <div className="absolute inset-0 w-full h-full opacity-30 mix-blend-overlay pointer-events-none">
-                <img
+                <Image
                     src="/images/destinations/hero-home.jpg"
                     alt="Simatiri Experience Background"
-                    className="w-full h-full object-cover"
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1C1812] via-[#1C1812]/50 to-[#1C1812]/20" />
             </div>

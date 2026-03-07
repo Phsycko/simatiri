@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-
+import Image from 'next/image'
 interface PageHeroProps {
     label?: string
     title: string
@@ -33,13 +33,22 @@ export function PageHero({
                 size === 'md' && 'min-h-[45vh] pt-40 pb-20',
                 size === 'sm' && 'min-h-[30vh] pt-32 pb-14',
             )}
-            style={backgroundImage ? {
-                backgroundImage: `${overlay ? overlay + ', ' : ''}url('${backgroundImage}')`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
-            } : undefined}
         >
+            {backgroundImage && (
+                <>
+                    <Image
+                        src={backgroundImage}
+                        alt={title}
+                        fill
+                        priority
+                        sizes="100vw"
+                        className="object-cover -z-10"
+                    />
+                    {overlay && (
+                        <div className="absolute inset-0 pointer-events-none -z-10" style={{ background: overlay }} />
+                    )}
+                </>
+            )}
             {/* Subtle pattern overlay */}
             {dark && !backgroundImage && (
                 <div className="absolute inset-0 opacity-[0.03]"

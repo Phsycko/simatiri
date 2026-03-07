@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, MapPin, Compass } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import Image from 'next/image';
 
 const destinations = [
     {
@@ -168,12 +169,7 @@ export function DestinationsFlagship() {
                         }}
                         className="absolute inset-0 origin-center"
                     >
-                        <img
-                            src={active.image}
-                            alt={active.name}
-                            className="w-full h-full object-cover block"
-                            onError={(e) => { e.currentTarget.style.display = 'none' }}
-                        />
+                        <Image src="" alt="" fill sizes="100vw" className="w-full h-full object-cover block" />
 
                         {/* Elite Warm Atmospheric Overlays */}
                         {/* Soft left feathering to merge sidebar and image */}

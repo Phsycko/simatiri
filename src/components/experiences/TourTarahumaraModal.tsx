@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, MapPin, X, Check, Camera, Compass } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image';
 
 interface TourTarahumaraModalProps {
     isOpen: boolean
@@ -68,12 +69,7 @@ export function TourTarahumaraModal({ isOpen, setIsOpen, tour }: TourTarahumaraM
                             <div className="overflow-y-auto w-full max-h-full no-scrollbar">
                                 {/* Header con Imagen */}
                                 <div className="relative h-64 md:h-80 w-full bg-[#111]">
-                                    <img
-                                        src="/images/destinations/creel.jpg"
-                                        alt="Tour Tarahumara"
-                                        className="w-full h-full object-cover opacity-90"
-                                        onError={(e) => { e.currentTarget.style.display = 'none' }}
-                                    />
+                                    <Image src="/images/destinations/creel.jpg" alt="Tour Tarahumara" fill sizes="(max-width: 768px) 100vw, 800px" className="w-full h-full object-cover opacity-90" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
                                     <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 pb-6 md:pb-8">
                                         <div className="flex items-center gap-3 text-[#7B4B2A] text-xs font-semibold uppercase tracking-widest mb-3">
