@@ -147,7 +147,7 @@ export function DestinationsFlagship() {
     // Preload all minimal references gracefully
     useEffect(() => {
         const nextIdx = (activeIndex + 1) % destinations.length;
-        const img = new Image();
+        const img = new window.Image();
         img.src = destinations[nextIdx].image;
     }, [activeIndex]);
 
