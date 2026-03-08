@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { SimatiriLogo } from '@/components/ui/SimatiriLogo'
 
 const navLinks = [
+    { label: 'Inicio', href: '/' },
     { label: 'Destinos', href: '/destinations' },
     { label: 'Experiencias', href: '/experiences' },
     { label: 'Paquetes', href: '/packages' },
