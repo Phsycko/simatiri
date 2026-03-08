@@ -32,7 +32,7 @@ export default function TailorMadeTripPage() {
                 title="Tu viaje, diseñado sin compromisos"
                 subtitle="Cuéntanos tu sueño. Nuestros especialistas diseñan el itinerario, seleccionan los hoteles y coordinan cada detalle para que tú solo te ocupes de disfrutar."
                 size="md"
-                backgroundImage="https://drive.google.com/uc?export=view&id=1TBUt5ejzTNg4aIVSRCYMTYxveJo9TjH1"
+                backgroundImage="https://drive.google.com/uc?export=view&id=1ebc95Zf8tXLNnYfobC6IfKMO-V3Bh7ML"
                 overlay="linear-gradient(rgba(0,0,0,0.36), rgba(0,0,0,0.42))"
             />
 

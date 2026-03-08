@@ -71,7 +71,13 @@ export function Navbar() {
                     </nav>
 
                     {/* CTA + Mobile Toggle */}
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center gap-3 md:gap-4">
+                        <Link
+                            href="/contact"
+                            className="hidden md:inline-flex text-xs font-semibold uppercase tracking-[0.2em] px-5 py-2.5 rounded-full border border-[#BFA884]/60 text-[#0a192f] bg-transparent hover:bg-[#F4EFE7]/90 hover:border-[#7B4B2A]/50 transition-all duration-300 ease-out"
+                        >
+                            Contacto
+                        </Link>
                         <Link
                             href="/tailor-made-trip"
                             className="hidden md:inline-flex text-xs font-semibold uppercase tracking-widest px-5 py-2.5 rounded-full bg-[#7B4B2A] hover:bg-[#8B5A36] active:bg-[#6A3F23] text-[#FFFFFF] shadow-none transition-all duration-[250ms] ease-in-out border-none"
@@ -119,21 +125,21 @@ export function Navbar() {
                                     {link.label}
                                 </Link>
                             ))}
+                        </nav>
+                        <div className="p-6 border-t border-gray-100 space-y-3">
                             <Link
                                 href="/contact"
                                 onClick={() => setMobileOpen(false)}
-                                className="px-4 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                                className="flex items-center justify-center w-full text-xs font-semibold uppercase tracking-[0.2em] px-5 py-3 rounded-full border border-[#BFA884]/60 text-[#0a192f] bg-transparent hover:bg-[#F4EFE7] transition-all duration-300"
                             >
                                 Contacto
                             </Link>
-                        </nav>
-                        <div className="p-6 border-t border-gray-100">
                             <Link
                                 href="/tailor-made-trip"
                                 onClick={() => setMobileOpen(false)}
                                 className="block w-full text-center text-xs font-semibold uppercase tracking-widest px-5 py-3 rounded-full bg-[#7B4B2A] hover:bg-[#8B5A36] active:bg-[#6A3F23] text-[#FFFFFF] shadow-none transition-all duration-[250ms] ease-in-out border-none"
                             >
-                                Cotizar Viaje Personalizado
+                                Cotizar Viaje
                             </Link>
                         </div>
                     </div>

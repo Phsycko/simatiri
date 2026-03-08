@@ -11,10 +11,11 @@ export default function ContactPage() {
     return (
         <>
             <PageHero
-                label="Contacto"
                 title="Hablemos de tu próximo viaje"
                 subtitle="Respondemos en menos de 24 horas. Tenemos atención especializada para agencias de viaje y viajeros individuales."
                 size="sm"
+                backgroundImage="https://drive.google.com/uc?export=view&id=1ebc95Zf8tXLNnYfobC6IfKMO-V3Bh7ML"
+                overlay="linear-gradient(rgba(0,0,0,0.36), rgba(0,0,0,0.42))"
             />
 
             <section className="py-20 px-8">
@@ -28,7 +29,7 @@ export default function ContactPage() {
                             {[
                                 { icon: MapPin, label: 'Dirección', value: 'Rochivo 00, Creel, Bocoyna\nChihuahua, CP 33200, México' },
                                 { icon: Phone, label: 'Teléfono', value: '+52 628 100 0000' },
-                                { icon: Mail, label: 'Correo', value: 'info@simatiri.com' },
+                                { icon: Mail, label: 'Correo', value: 'ventas@simatiri.com' },
                                 { icon: Clock, label: 'Horario', value: 'Lunes a Sábado\n9:00 AM – 7:00 PM (hora Chihuahua)' },
                             ].map(({ icon: Icon, label, value }) => (
                                 <div key={label} className="flex items-start gap-4">
@@ -43,11 +44,11 @@ export default function ContactPage() {
                             ))}
                         </div>
 
-                        <div className="bg-[#0a192f] rounded-2xl p-6 text-white">
+                        <div className="bg-[#1a1512] rounded-2xl p-6 text-white">
                             <h4 className="font-serif text-lg mb-2">Para Agencias de Viaje</h4>
                             <p className="text-white/60 text-sm mb-4">Escríbenos directamente para acceder al programa corporativo con tarifas netas y beneficios exclusivos.</p>
-                            <a href="mailto:agencias@simatiri.com" className="text-[#7B4B2A] text-sm font-medium hover:text-white transition-colors">
-                                agencias@simatiri.com →
+                            <a href="mailto:ventas@simatiri.com" className="text-[#B7925A] text-sm font-medium hover:text-[#e5d3b3] transition-colors">
+                                ventas@simatiri.com →
                             </a>
                         </div>
                     </div>
