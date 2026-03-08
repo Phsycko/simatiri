@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { PageHero } from '@/components/ui/PageHero'
+import { ContactForm } from '@/components/contact/ContactForm'
 import { buildShareMeta } from '@/lib/metadata'
 
 const title = 'Contacto | Simatiri Experience'
@@ -62,46 +63,7 @@ export default function ContactPage() {
                     <div className="lg:col-span-3">
                         <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
                             <h3 className="font-serif text-2xl text-[#0a192f] mb-6">Envíanos un Mensaje</h3>
-                            <form className="space-y-5">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Nombre</label>
-                                        <input type="text" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0a192f] transition-colors" placeholder="Tu nombre" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Correo</label>
-                                        <input type="email" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0a192f] transition-colors" placeholder="tu@correo.com" />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Tipo de Consulta</label>
-                                    <select className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0a192f] transition-colors bg-white">
-                                        <option>Reservación de paquete</option>
-                                        <option>Cotización de tour</option>
-                                        <option>Membresía de agencia B2B</option>
-                                        <option>Viaje a la medida</option>
-                                        <option>Otra consulta</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Teléfono (opcional)</label>
-                                    <input type="tel" className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0a192f] transition-colors" placeholder="+52 XXX XXX XXXX" />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Mensaje</label>
-                                    <textarea rows={5} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0a192f] transition-colors resize-none" placeholder="Cuéntanos sobre tu viaje, fechas, número de pasajeros..." />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="w-full bg-[#0a192f] hover:bg-[#2e4a3d] text-white text-sm font-semibold uppercase tracking-wider py-4 rounded-full transition-colors"
-                                >
-                                    Enviar Mensaje
-                                </button>
-                            </form>
+                            <ContactForm />
                         </div>
                     </div>
 
