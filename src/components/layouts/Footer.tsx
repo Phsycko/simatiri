@@ -5,7 +5,6 @@ const footerNav = {
     Descubrir: [
         { label: 'Destinos', href: '/destinations' },
         { label: 'Experiencias', href: '/experiences' },
-        { label: 'Paquetes CHEPE', href: '/packages' },
         { label: 'Hoteles', href: '/hotels' },
     ],
     Empresa: [
