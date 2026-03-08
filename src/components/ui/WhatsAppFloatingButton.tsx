@@ -26,13 +26,13 @@ export function WhatsAppFloatingButton() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.8, ease: [0.33, 1, 0.68, 1] }}
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-3 rounded-full border border-[#B7925A]/25 bg-[#0a192f] px-4 py-3 text-[#F4EFE7] shadow-[0_4px_24px_rgba(0,0,0,0.18)] transition-all duration-300 hover:border-[#B7925A]/50 hover:shadow-[0_8px_32px_rgba(0,0,0,0.22)] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#B7925A]/40 focus:ring-offset-2 focus:ring-offset-[#0a192f] md:bottom-8 md:right-8 md:px-5 md:py-3.5"
+      className="fixed bottom-6 right-6 z-40 flex items-center gap-3 rounded-full border border-[#5C4033]/40 bg-[#7B4B2A] px-4 py-3 text-white shadow-[0_4px_24px_rgba(123,75,42,0.35)] transition-all duration-300 hover:bg-[#6B4028] hover:border-[#5C4033] hover:shadow-[0_8px_32px_rgba(123,75,42,0.4)] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#7B4B2A]/60 focus:ring-offset-2 focus:ring-offset-white md:bottom-8 md:right-8 md:px-5 md:py-3.5"
     >
       {/* WhatsApp icon — subtle, integrated (outline style in brand cream) */}
       <span className="flex shrink-0 items-center justify-center" aria-hidden>
         <WhatsAppIcon className="h-5 w-5 md:h-[22px] md:w-[22px]" />
       </span>
-      <span className="hidden text-[11px] font-medium uppercase tracking-[0.2em] text-[#F4EFE7]/95 sm:inline md:text-xs">
+      <span className="hidden text-[11px] font-medium uppercase tracking-[0.2em] text-white sm:inline md:text-xs">
         Hablar con un asesor
       </span>
     </motion.a>
