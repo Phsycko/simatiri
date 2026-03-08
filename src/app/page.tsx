@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { ArrowRight, Train, Star, MapPin, Users } from 'lucide-react'
 import { prisma } from '@/lib/db/prisma'
 import RouteExperienceSection from '@/components/home/RouteExperienceSection'
+import { HomeGallerySection } from '@/components/home/HomeGallerySection'
 import { TourTarahumaraHomeCard } from '@/components/home/TourTarahumaraHomeCard'
 import { TourBarrancasDelCobreHomeCard } from '@/components/home/TourBarrancasDelCobreHomeCard'
 import { TourBasaseachiHomeCard } from '@/components/home/TourBasaseachiHomeCard'
@@ -262,6 +263,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* GALERÍA */}
+      <HomeGallerySection />
 
       {/* CTA AGENCIAS */}
       <section className="py-28 px-8">
