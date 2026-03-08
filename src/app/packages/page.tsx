@@ -3,10 +3,42 @@ import { PageHero } from '@/components/ui/PageHero'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Train, Calendar } from 'lucide-react'
-import { getRelatedPackageIds, getDestinationNameForSlug } from '@/lib/destination-related-packages'
+import { getRelatedPackageIds, getDestinationNameForSlug, normalizeSlug } from '@/lib/destination-related-packages'
 
-// Ensure this page is always server-rendered per request (no static empty list when DB is unavailable at build)
+// Ensure this page is always server-rendered per request
 export const dynamic = 'force-dynamic'
+
+// Static fallback when DB returns no packages (e.g. production without seed)
+const STATIC_PACKAGE_ROUTES: Record<number, string> = {
+    1: 'El Fuerte → Creel → Chihuahua', 2: 'Chihuahua → Creel → Divisadero',
+    3: 'Chihuahua → Creel → Chihuahua', 4: 'Chihuahua → Creel → Chihuahua',
+    5: 'Chihuahua → Creel → Chihuahua', 6: 'Chihuahua → Creel → Chihuahua',
+    7: 'Chihuahua → Creel → Chihuahua', 8: 'Chihuahua → Creel → Chihuahua',
+    9: 'Los Mochis → Creel → Los Mochis', 10: 'Los Mochis → Creel → Los Mochis',
+    11: 'Los Mochis → Creel → Los Mochis', 12: 'Los Mochis → Creel → Los Mochis',
+    13: 'Los Mochis → Creel → Los Mochis', 14: 'Chihuahua → Creel → Los Mochis',
+    15: 'Chihuahua → Creel → Los Mochis', 16: 'El Fuerte → Creel → El Fuerte',
+    17: 'El Fuerte → Creel → El Fuerte',
+}
+const STATIC_PACKAGES: Array<{ id: number; title: string; durationDays: number; trainClass: string; description: string; prices: never[] }> = [
+    { id: 1, title: 'Paquete 1', durationDays: 7, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[1], prices: [] },
+    { id: 2, title: 'Paquete 2', durationDays: 6, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[2], prices: [] },
+    { id: 3, title: 'Paquete 3', durationDays: 5, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[3], prices: [] },
+    { id: 4, title: 'Paquete 4', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[4], prices: [] },
+    { id: 5, title: 'Paquete 5', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[5], prices: [] },
+    { id: 6, title: 'Paquete 6', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[6], prices: [] },
+    { id: 7, title: 'Paquete 7', durationDays: 3, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[7], prices: [] },
+    { id: 8, title: 'Paquete 8', durationDays: 3, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[8], prices: [] },
+    { id: 9, title: 'Paquete 9', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[9], prices: [] },
+    { id: 10, title: 'Paquete 10', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[10], prices: [] },
+    { id: 11, title: 'Paquete 11', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[11], prices: [] },
+    { id: 12, title: 'Paquete 12', durationDays: 5, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[12], prices: [] },
+    { id: 13, title: 'Paquete 13', durationDays: 7, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[13], prices: [] },
+    { id: 14, title: 'Paquete 14', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[14], prices: [] },
+    { id: 15, title: 'Paquete 15', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[15], prices: [] },
+    { id: 16, title: 'Paquete 16', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[16], prices: [] },
+    { id: 17, title: 'Paquete 17', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[17], prices: [] },
+]
 
 // Map each package id to its image path
 const packageImages: Record<number, string> = {
@@ -64,18 +96,18 @@ const hrefMap: Record<number, string> = {
 export default async function PackagesPage({
     searchParams,
 }: {
-    searchParams?: Promise<{ destino?: string }> | { destino?: string }
+    searchParams?: Promise<{ destino?: string; debug?: string }> | { destino?: string; debug?: string }
 }) {
-    // Safe resolution: Next 15+ passes Promise; support both Promise and plain object
     const params =
         searchParams != null && typeof (searchParams as Promise<unknown>).then === 'function'
-            ? await (searchParams as Promise<{ destino?: string }>)
-            : (searchParams as { destino?: string }) ?? {}
+            ? await (searchParams as Promise<{ destino?: string; debug?: string }>)
+            : (searchParams as { destino?: string; debug?: string }) ?? {}
 
-    const destinoSlug =
-        params != null && typeof params.destino === 'string' ? params.destino.trim() : undefined
+    const rawDestino = params != null && typeof params.destino === 'string' ? params.destino : undefined
+    const destinoSlug = rawDestino ? normalizeSlug(rawDestino) : undefined
     const relatedIds = destinoSlug ? getRelatedPackageIds(destinoSlug) : []
     const destinationName = destinoSlug ? getDestinationNameForSlug(destinoSlug) : null
+    const debug = params?.debug === '1' || params?.debug === 'true'
 
     let packages: Awaited<ReturnType<typeof prisma.package.findMany>>
     try {
@@ -97,8 +129,18 @@ export default async function PackagesPage({
             ? packages.filter((p) => p != null && relatedIdsSet!.has(Number(p.id)))
             : packages
 
-    // Fallback: if we have packages from DB but filter returned none (e.g. id mismatch), show all so we never hide existing packages
+    let dataSource: 'db' | 'static' = 'db'
+
+    if (packages.length === 0 && destinoSlug && relatedIds.length > 0) {
+        const staticFiltered = STATIC_PACKAGES.filter((p) => relatedIdsSet!.has(p.id))
+        if (staticFiltered.length > 0) {
+            displayedPackages = staticFiltered as unknown as typeof packages
+            dataSource = 'static'
+        }
+    }
+
     if (
+        dataSource === 'db' &&
         destinoSlug &&
         relatedIds.length > 0 &&
         packages.length > 0 &&
@@ -118,6 +160,19 @@ export default async function PackagesPage({
             />
 
             <section className="py-20 px-8 max-w-7xl mx-auto">
+                {debug && (
+                    <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-left font-mono text-xs text-amber-900">
+                        <div className="font-semibold mb-2">[Debug] Paquetes por destino</div>
+                        <ul className="space-y-1">
+                            <li><strong>destino (raw):</strong> {rawDestino ?? '—'}</li>
+                            <li><strong>destino (normalized):</strong> {destinoSlug ?? '—'}</li>
+                            <li><strong>relatedIds:</strong> [{relatedIds.join(', ')}]</li>
+                            <li><strong>packages from DB:</strong> {packages.length}</li>
+                            <li><strong>displayed (count):</strong> {displayedPackages.length}</li>
+                            <li><strong>data source:</strong> {dataSource}</li>
+                        </ul>
+                    </div>
+                )}
                 {destinationName && (
                     <div className="mb-12 text-center">
                         <p className="text-[10px] uppercase tracking-[0.3em] text-[#7B4B2A] font-semibold mb-2">
