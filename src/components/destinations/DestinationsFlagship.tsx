@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, MapPin, Compass, X } from 'lucide-react'
+import { ArrowUpRight, MapPin, Compass, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
@@ -430,39 +430,49 @@ export function DestinationsFlagship() {
                 </div>
             </div>
 
-            {/* 2B. MOBILE INDEX (Floating Top Seamless) */}
-            <div className="lg:hidden absolute top-0 left-0 w-full z-40 bg-gradient-to-b from-[#11110F]/95 to-transparent pt-6 pb-6">
-                <div className="px-6 mb-5 flex justify-between items-center">
-                    <span className="text-[#B7925A] tracking-[0.3em] uppercase text-[7px] font-semibold flex items-center gap-2">
-                        <Compass size={9} /> Atlas
-                    </span>
-                    <span className="text-[#CFC4B4]/50 tracking-[0.3em] font-mono text-[8px]">
-                        <span className="text-[#F4EFE7]">{active.id}</span> / 10
-                    </span>
-                </div>
-                <div className="overflow-x-auto no-scrollbar px-6 flex items-center gap-7 snap-x">
-                    {destinations.map((d, idx) => {
-                        const isActive = idx === activeIndex;
-                        return (
-                            <button
-                                key={d.slug}
-                                onClick={() => setActiveIndex(idx)}
-                                className={cn(
-                                    "snap-start whitespace-nowrap pb-2 text-sm font-serif transition-all duration-700 ease-[0.33,1,0.68,1] relative",
-                                    isActive ? "text-[#F4EFE7] text-base tracking-wide" : "text-[#CFC4B4]/40 hover:text-[#CFC4B4]/80"
-                                )}
+            {/* 2B. MOBILE — Carrusel premium con flechas (solo móvil) */}
+            <div className="lg:hidden absolute top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] pt-4 pb-0 px-4">
+                <div className="flex items-center justify-between gap-4 rounded-2xl bg-[#11110F]/94 backdrop-blur-md border border-[#BFA884]/15 py-3 px-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                    <button
+                        type="button"
+                        onClick={() => setActiveIndex((prev) => (prev === 0 ? destinations.length - 1 : prev - 1))}
+                        aria-label="Destino anterior"
+                        className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center border border-[#BFA884]/25 bg-[#181410]/60 text-[#CFC4B4] hover:text-[#F4EFE7] hover:border-[#B7925A]/50 hover:bg-[#181410]/80 transition-all duration-300"
+                    >
+                        <ChevronLeft size={20} strokeWidth={1.5} className="text-[#F4EFE7]/90" />
+                    </button>
+
+                    <div className="flex-1 min-w-0 flex flex-col items-center justify-center text-center px-2">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={`nav-${active.slug}`}
+                                initial={{ opacity: 0, y: 4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -4 }}
+                                transition={{ duration: 0.28, ease: [0.33, 1, 0.68, 1] }}
+                                className="flex flex-col items-center gap-0.5"
                             >
-                                {d.name}
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="mobile-active-border"
-                                        className="absolute bottom-0 left-0 w-full h-[1px] bg-[#B7925A]"
-                                        transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
-                                    />
-                                )}
-                            </button>
-                        )
-                    })}
+                                <span className="font-serif text-lg text-[#F4EFE7] tracking-tight leading-tight">
+                                    {active.name}
+                                </span>
+                                <span className="text-[9px] uppercase tracking-[0.2em] text-[#CFC4B4]/70 font-medium">
+                                    {active.region}
+                                </span>
+                            </motion.div>
+                        </AnimatePresence>
+                        <span className="mt-1.5 text-[9px] font-mono text-[#CFC4B4]/50 tabular-nums tracking-wider">
+                            {String(activeIndex + 1).padStart(2, '0')} / {destinations.length}
+                        </span>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => setActiveIndex((prev) => (prev === destinations.length - 1 ? 0 : prev + 1))}
+                        aria-label="Destino siguiente"
+                        className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center border border-[#BFA884]/25 bg-[#181410]/60 text-[#CFC4B4] hover:text-[#F4EFE7] hover:border-[#B7925A]/50 hover:bg-[#181410]/80 transition-all duration-300"
+                    >
+                        <ChevronRight size={20} strokeWidth={1.5} className="text-[#F4EFE7]/90" />
+                    </button>
                 </div>
             </div>
 
