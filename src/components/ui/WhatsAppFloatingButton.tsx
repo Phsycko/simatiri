@@ -8,11 +8,12 @@ const SITE_NAME = 'Simatiri Experience'
 const SHARE_TEXT = 'Te comparto esta página de Simatiri Experience.'
 const SCROLL_THRESHOLD = 180
 
-const spring = { type: 'spring' as const, stiffness: 380, damping: 32 }
+const spring = { type: 'spring' as const, stiffness: 400, damping: 36 }
+const springSlow = { type: 'spring' as const, stiffness: 320, damping: 34 }
 
 /**
  * Premium floating contact: WhatsApp (primary) + Share (secondary).
- * Expands at top of page, compacts on scroll. Refined share icon + smooth morph.
+ * Expands at top of page, compacts on scroll. Luxury positioning, shadows, and motion.
  */
 export function WhatsAppFloatingButton() {
   const [mounted, setMounted] = useState(false)
@@ -75,27 +76,45 @@ export function WhatsAppFloatingButton() {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.8, ease: [0.33, 1, 0.68, 1] }}
-        className="fixed bottom-6 right-6 z-40 flex flex-col-reverse sm:flex-row items-end sm:items-center gap-2 md:bottom-8 md:right-8"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{ duration: 0.6, delay: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+        className="fixed bottom-8 right-8 z-40 flex flex-col-reverse sm:flex-row items-end sm:items-center"
+        style={{ gap: compact ? '10px' : '16px' }}
       >
-        {/* Secundario: Compartir */}
+        {/* Secundario: Compartir — expandido con texto, compacto como pastilla centrada */}
         <motion.button
           type="button"
           onClick={handleShare}
           aria-label="Compartir esta página"
           animate={{
-            paddingLeft: compact ? 12 : 18,
-            paddingRight: compact ? 12 : 18,
-            paddingTop: compact ? 10 : 13,
-            paddingBottom: compact ? 10 : 13,
+            paddingLeft: compact ? 14 : 20,
+            paddingRight: compact ? 14 : 20,
+            paddingTop: compact ? 14 : 15,
+            paddingBottom: compact ? 14 : 15,
+            boxShadow: compact
+              ? '0 1px 0 0 rgba(255,255,255,0.7) inset, 0 2px 10px rgba(28,24,18,0.06)'
+              : '0 1px 0 0 rgba(255,255,255,0.8) inset, 0 2px 8px rgba(28,24,18,0.06), 0 8px 24px rgba(28,24,18,0.08)',
           }}
           transition={spring}
-          className="flex items-center justify-center sm:justify-start gap-2 rounded-full border border-[#5C4033]/35 bg-[#FAF5EF]/95 backdrop-blur-sm text-[#1C1812] shadow-[0_2px_16px_rgba(28,24,18,0.08)] transition-colors duration-200 hover:border-[#7B4B2A]/50 hover:bg-[#FAF5EF] hover:shadow-[0_4px_20px_rgba(28,24,18,0.12)] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#7B4B2A]/40 focus:ring-offset-2 focus:ring-offset-[#FAF5EF] min-w-0 overflow-hidden"
+          whileHover={{
+            y: -2,
+            scale: 1.03,
+            boxShadow: compact
+              ? '0 1px 0 0 rgba(255,255,255,0.8) inset, 0 4px 16px rgba(28,24,18,0.1)'
+              : '0 1px 0 0 rgba(255,255,255,0.9) inset, 0 4px 12px rgba(28,24,18,0.08), 0 12px 32px rgba(28,24,18,0.12)',
+          }}
+          whileTap={{ scale: 0.97 }}
+          className={`flex items-center rounded-full border border-[#E5DDD4]/90 bg-[#FBF9F6] backdrop-blur-md text-[#1C1812] transition-colors duration-200 hover:border-[#D4C9BC] focus:outline-none focus:ring-2 focus:ring-[#7B4B2A]/30 focus:ring-offset-2 focus:ring-offset-[#FBF9F6] min-w-0 overflow-hidden min-h-[48px] sm:min-h-0 ${compact ? 'justify-center min-w-[48px]' : 'justify-center sm:justify-start gap-2.5'}`}
         >
           <span className="shrink-0 flex items-center justify-center text-[#7B4B2A]">
-            <ShareIconRefined className={compact ? 'h-4 w-4' : 'h-4 w-4 sm:h-[19px] sm:w-[19px]'} strokeWidth={1.35} />
+            <ShareIconRefined
+              className={compact ? 'h-5 w-5' : 'h-4 w-4 sm:h-5 sm:w-5'}
+              strokeWidth={compact ? 1.5 : 1.4}
+            />
           </span>
           <span className="overflow-hidden whitespace-nowrap flex items-center min-w-0">
             <motion.span
@@ -103,40 +122,51 @@ export function WhatsAppFloatingButton() {
                 opacity: compact ? 0 : 1,
                 maxWidth: compact ? 0 : 100,
               }}
-              transition={spring}
-              className="block text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.2em] text-[#1C1812]"
+              transition={springSlow}
+              className="block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#1C1812]"
             >
               Compartir
             </motion.span>
           </span>
         </motion.button>
 
-        {/* Principal: Hablar con un asesor */}
+        {/* Principal: Hablar con un asesor — expandido con texto, compacto como pastilla centrada */}
         <motion.a
           href={getWhatsAppUrl()}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Hablar con un asesor por WhatsApp"
           animate={{
-            paddingLeft: compact ? 14 : 24,
-            paddingRight: compact ? 14 : 24,
-            paddingTop: compact ? 12 : 15,
-            paddingBottom: compact ? 12 : 15,
+            paddingLeft: compact ? 14 : 28,
+            paddingRight: compact ? 14 : 28,
+            paddingTop: compact ? 14 : 16,
+            paddingBottom: compact ? 14 : 16,
+            boxShadow: compact
+              ? '0 1px 0 0 rgba(255,255,255,0.1) inset, 0 3px 12px rgba(123,75,42,0.28)'
+              : '0 1px 0 0 rgba(255,255,255,0.12) inset, 0 4px 14px rgba(123,75,42,0.35), 0 12px 32px rgba(28,24,18,0.2)',
           }}
           transition={spring}
-          className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 rounded-full border border-[#5C4033]/40 bg-[#7B4B2A] text-white shadow-[0_4px_24px_rgba(123,75,42,0.35)] transition-colors duration-200 hover:bg-[#6B4028] hover:border-[#5C4033] hover:shadow-[0_8px_32px_rgba(123,75,42,0.4)] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#7B4B2A]/60 focus:ring-offset-2 focus:ring-offset-white min-w-0 overflow-hidden"
+          whileHover={{
+            y: -2,
+            scale: 1.03,
+            boxShadow: compact
+              ? '0 1px 0 0 rgba(255,255,255,0.12) inset, 0 6px 20px rgba(123,75,42,0.38)'
+              : '0 1px 0 0 rgba(255,255,255,0.1) inset, 0 6px 20px rgba(123,75,42,0.4), 0 16px 40px rgba(28,24,18,0.25)',
+          }}
+          whileTap={{ scale: 0.97 }}
+          className={`flex items-center rounded-full border border-[#5A3828]/50 bg-[#7B4B2A] text-white transition-colors duration-200 hover:bg-[#6B3D22] hover:border-[#4A2E1F] focus:outline-none focus:ring-2 focus:ring-[#7B4B2A]/50 focus:ring-offset-2 focus:ring-offset-white min-w-0 overflow-hidden min-h-[48px] sm:min-h-0 ${compact ? 'justify-center min-w-[48px]' : 'justify-center sm:justify-start gap-2.5 sm:gap-3'}`}
         >
-          <span className="shrink-0 flex items-center justify-center">
+          <span className="shrink-0 flex items-center justify-center text-white">
             <WhatsAppIcon className={compact ? 'h-5 w-5' : 'h-5 w-5 md:h-6 md:w-6'} />
           </span>
           <span className="overflow-hidden whitespace-nowrap flex items-center min-w-0">
             <motion.span
               animate={{
                 opacity: compact ? 0 : 1,
-                maxWidth: compact ? 0 : 240,
+                maxWidth: compact ? 0 : 260,
               }}
-              transition={spring}
-              className="block text-[11px] font-medium uppercase tracking-[0.2em] text-white md:text-xs"
+              transition={springSlow}
+              className="block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-white"
             >
               Hablar con un asesor
             </motion.span>
@@ -148,15 +178,15 @@ export function WhatsAppFloatingButton() {
       <AnimatePresence>
         {toast && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.25, ease: [0.33, 1, 0.68, 1] }}
-            className="fixed bottom-20 right-6 z-50 sm:bottom-24 sm:right-8 md:bottom-24 md:right-8"
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="fixed bottom-24 right-8 z-50 sm:bottom-28 sm:right-8"
           >
-            <div className="rounded-full border border-[#2e4a3d]/30 bg-[#1C1812] px-4 py-2.5 shadow-[0_8px_32px_rgba(28,24,18,0.25)]">
-              <span className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.15em] text-[#FAF5EF]">
-                <CheckIcon className="h-3.5 w-3.5 text-[#7B6B4A] shrink-0" />
+            <div className="rounded-full border border-[#2e4a3d]/25 bg-[#1C1812]/95 backdrop-blur-md px-5 py-3 shadow-[0_8px_32px_rgba(28,24,18,0.3)]">
+              <span className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#FAF5EF]">
+                <CheckIcon className="h-4 w-4 text-[#B7925A] shrink-0" />
                 {toast === 'copied' ? 'Enlace copiado' : 'Listo para compartir'}
               </span>
             </div>
@@ -187,7 +217,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 /** Icono editorial: arrow-up-right fino, lineal, premium */
 function ShareIconRefined({
   className,
-  strokeWidth = 1.35,
+  strokeWidth = 1.4,
 }: {
   className?: string
   strokeWidth?: number
