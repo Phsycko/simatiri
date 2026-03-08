@@ -61,21 +61,36 @@ const hrefMap: Record<number, string> = {
 export default async function PackagesPage({
     searchParams,
 }: {
-    searchParams: Promise<{ destino?: string }>
+    searchParams?: Promise<{ destino?: string }> | { destino?: string }
 }) {
-    const params = await searchParams
-    const destinoSlug = typeof params?.destino === 'string' ? params.destino.trim() : undefined
+    // Safe resolution: Next 15+ passes Promise; support both Promise and plain object
+    const params =
+        searchParams != null && typeof (searchParams as Promise<unknown>).then === 'function'
+            ? await (searchParams as Promise<{ destino?: string }>)
+            : (searchParams as { destino?: string }) ?? {}
+
+    const destinoSlug =
+        params != null && typeof params.destino === 'string' ? params.destino.trim() : undefined
     const relatedIds = destinoSlug ? getRelatedPackageIds(destinoSlug) : []
     const destinationName = destinoSlug ? getDestinationNameForSlug(destinoSlug) : null
 
-    const packages = await prisma.package.findMany({
-        include: { prices: true },
-        orderBy: { id: 'asc' },
-    })
+    let packages: Awaited<ReturnType<typeof prisma.package.findMany>>
+    try {
+        packages = await prisma.package.findMany({
+            include: { prices: true },
+            orderBy: { id: 'asc' },
+        })
+    } catch {
+        packages = []
+    }
 
+    if (!Array.isArray(packages)) packages = []
+
+    const relatedIdsSet =
+        relatedIds.length > 0 ? new Set(relatedIds.map((id) => Number(id))) : null
     const displayedPackages =
-        relatedIds.length > 0
-            ? packages.filter((p: any) => relatedIds.includes(p.id))
+        relatedIdsSet != null && relatedIdsSet.size > 0
+            ? packages.filter((p) => p != null && relatedIdsSet.has(Number(p.id)))
             : packages
 
     return (
@@ -112,11 +127,12 @@ export default async function PackagesPage({
                     </div>
                 )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {displayedPackages.map((pkg: any, index: number) => {
-                        const baseDoublePrice = pkg.prices.find((p: any) => p.occupancyType === 'DOBLE' && !p.isUpgrade)
-                        const upgradeDouble = pkg.prices.find((p: any) => p.occupancyType === 'DOBLE' && p.isUpgrade)
-                        const imageSrc = packageImages[pkg.id]
-                        const href = hrefMap[pkg.id] ?? `/packages/${pkg.id}`
+                    {Array.isArray(displayedPackages) && displayedPackages.length > 0 ? displayedPackages.map((pkg: any, index: number) => {
+                        const prices = pkg?.prices ?? []
+                        const baseDoublePrice = prices.find((p: any) => p?.occupancyType === 'DOBLE' && !p?.isUpgrade)
+                        const upgradeDouble = prices.find((p: any) => p?.occupancyType === 'DOBLE' && p?.isUpgrade)
+                        const imageSrc = pkg?.id != null ? packageImages[pkg.id] : undefined
+                        const href = pkg?.id != null ? (hrefMap[pkg.id] ?? `/packages/${pkg.id}`) : '/packages'
 
                         return (
                             <Link
@@ -141,13 +157,13 @@ export default async function PackagesPage({
                                     {/* Train badge */}
                                     <div className="absolute top-5 left-5 flex items-center gap-2 bg-black/30 backdrop-blur-sm rounded-full px-3 py-1.5 z-10">
                                         <Train size={13} className="text-[#7B4B2A]" />
-                                        <span className="text-white text-xs font-medium">{pkg.trainClass}</span>
+                                        <span className="text-white text-xs font-medium">{pkg?.trainClass ?? 'CHEPE'}</span>
                                     </div>
                                     {/* Title over image */}
                                     <div className="absolute bottom-5 left-5 right-5 z-10">
-                                        <h2 className="font-serif text-2xl text-white group-hover:text-[#e5d3b3] transition-colors">{pkg.title}</h2>
+                                        <h2 className="font-serif text-2xl text-white group-hover:text-[#e5d3b3] transition-colors">{pkg?.title ?? 'Paquete'}</h2>
                                         <p className="text-white/60 text-sm mt-1 line-clamp-1">
-                                            {routeMap[pkg.id] ?? pkg.description}
+                                            {pkg?.id != null ? (routeMap[pkg.id] ?? pkg?.description) : pkg?.description ?? ''}
                                         </p>
                                     </div>
                                 </div>
@@ -155,14 +171,14 @@ export default async function PackagesPage({
                                 <div className="p-6">
                                     <div className="flex items-center gap-2 text-sm text-gray-500 mb-5">
                                         <Calendar size={15} />
-                                        <span>{pkg.durationDays} Días / {pkg.durationDays - 1} Noches</span>
+                                        <span>{pkg?.durationDays != null ? `${pkg.durationDays} Días / ${Number(pkg.durationDays) - 1} Noches` : '—'}</span>
                                     </div>
 
                                     <div className="grid grid-cols-3 gap-3 mb-5">
-                                        {pkg.prices.filter((p: any) => !p.isUpgrade).map((p: any) => (
+                                        {(prices.filter((p: any) => !p?.isUpgrade) ?? []).map((p: any) => (
                                             <div key={p.id} className="bg-gray-50 rounded-xl p-3 text-center">
-                                                <div className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">{p.occupancyType}</div>
-                                                <div className="text-sm font-bold text-[#0a192f]">${p.pricePerPerson.toLocaleString()}</div>
+                                                <div className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">{p?.occupancyType ?? ''}</div>
+                                                <div className="text-sm font-bold text-[#0a192f]">${Number(p?.pricePerPerson ?? 0).toLocaleString()}</div>
                                             </div>
                                         ))}
                                     </div>
@@ -170,13 +186,19 @@ export default async function PackagesPage({
                                     {upgradeDouble && (
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                                             <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">Upgrade Express</span>
-                                            <span className="text-sm font-semibold text-[#7B4B2A]">${upgradeDouble.pricePerPerson.toLocaleString()} MXN</span>
+                                            <span className="text-sm font-semibold text-[#7B4B2A]">${Number(upgradeDouble?.pricePerPerson ?? 0).toLocaleString()} MXN</span>
                                         </div>
                                     )}
                                 </div>
                             </Link>
                         )
-                    })}
+                    }) : (
+                        <div className="col-span-full text-center py-16 px-4">
+                            <p className="font-serif text-xl text-[#0a192f] mb-2">No hay paquetes para mostrar</p>
+                            <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">Explora nuestros circuitos o ajusta el destino seleccionado.</p>
+                            <Link href="/packages" className="text-sm font-semibold text-[#7B4B2A] hover:underline">Ver todos los paquetes</Link>
+                        </div>
+                    )}
                 </div>
             </section>
         </>

@@ -31,13 +31,16 @@ const DESTINATION_NAMES: Record<string, string> = {
 }
 
 export function getRelatedPackageIds(destinoSlug: string): number[] {
+    if (destinoSlug == null || typeof destinoSlug !== 'string') return []
     const slug = destinoSlug.toLowerCase().trim()
-    return DESTINATION_RELATED_PACKAGE_IDS[slug] ?? []
+    const ids = DESTINATION_RELATED_PACKAGE_IDS[slug]
+    return Array.isArray(ids) ? ids : []
 }
 
 export function getDestinationNameForSlug(destinoSlug: string): string {
+    if (destinoSlug == null || typeof destinoSlug !== 'string') return ''
     const slug = destinoSlug.toLowerCase().trim()
-    return DESTINATION_NAMES[slug] ?? destinoSlug
+    return DESTINATION_NAMES[slug] ?? slug
 }
 
 export function hasRelatedPackages(destinoSlug: string): boolean {
