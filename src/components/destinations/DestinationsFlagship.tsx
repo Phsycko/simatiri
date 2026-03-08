@@ -430,8 +430,8 @@ export function DestinationsFlagship() {
                 </div>
             </div>
 
-            {/* 2B. MOBILE — Carrusel premium con flechas (solo móvil) */}
-            <div className="lg:hidden absolute top-0 left-0 right-0 z-40 pt-[env(safe-area-inset-top)] pt-4 pb-0 px-4">
+            {/* 2B. MOBILE — Carrusel premium con flechas (solo móvil); offset para quedar bajo navbar h-16 */}
+            <div className="lg:hidden absolute top-16 left-0 right-0 z-40 pt-2 pb-0 px-4">
                 <div className="flex items-center justify-between gap-4 rounded-2xl bg-[#11110F]/94 backdrop-blur-md border border-[#BFA884]/15 py-3 px-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
                     <button
                         type="button"
