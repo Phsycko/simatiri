@@ -2,10 +2,15 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ShieldCheck, Users, Star, ArrowRight, MapPin, Calendar } from 'lucide-react'
 import { PageHero } from '@/components/ui/PageHero'
+import { buildShareMeta } from '@/lib/metadata'
+
+const title = 'Nosotros | Simatiri Experience'
+const description = 'Simatiri Experience: operadora turística certificada en Creel, Chihuahua. RNT 0108009be33c3. Especialistas en el Tren CHEPE y la Sierra Tarahumara.'
 
 export const metadata: Metadata = {
-    title: 'Nosotros',
-    description: 'Simatiri Experience: operadora turística certificada en Creel, Chihuahua. RNT 0108009be33c3. Especialistas en el Tren CHEPE y la Sierra Tarahumara.',
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/about' }),
 }
 
 const convenio = [

@@ -1,10 +1,15 @@
 import type { Metadata } from 'next'
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { PageHero } from '@/components/ui/PageHero'
+import { buildShareMeta } from '@/lib/metadata'
+
+const title = 'Contacto | Simatiri Experience'
+const description = 'Contacta a Simatiri Experience para reservas, cotizaciones y convenios de agencia. Estamos en Creel, Chihuahua.'
 
 export const metadata: Metadata = {
-    title: 'Contacto',
-    description: 'Contacta a Simatiri Experience para reservas, cotizaciones y convenios de agencia. Estamos en Creel, Chihuahua.',
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/contact' }),
 }
 
 export default function ContactPage() {

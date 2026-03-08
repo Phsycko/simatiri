@@ -4,6 +4,7 @@ import './globals.css'
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { WhatsAppFloatingButton } from '@/components/ui/WhatsAppFloatingButton'
+import { getBaseUrl, buildShareMeta } from '@/lib/metadata'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -17,23 +18,34 @@ const playfair = Playfair_Display({
   display: 'swap',
 })
 
+const defaultTitle = 'SIMATIRI EXPERIENCE | Operadora Turística en las Barrancas del Cobre'
+const defaultDescription =
+  'Operadora turística certificada especializada en la Sierra Tarahumara, Creel, el Tren CHEPE y las Barrancas del Cobre. Paquetes, tours y hoteles exclusivos en el norte de México.'
+
+const defaultShare = buildShareMeta({
+  title: defaultTitle,
+  description: defaultDescription,
+  pathname: '/',
+})
+
 export const metadata: Metadata = {
   title: {
-    default: 'SIMATIRI EXPERIENCE | Operadora Turística en las Barrancas del Cobre',
+    default: defaultTitle,
     template: '%s | SIMATIRI EXPERIENCE',
   },
-  description:
-    'Operadora turística certificada especializada en la Sierra Tarahumara, Creel, el Tren CHEPE y las Barrancas del Cobre. Paquetes, tours y hoteles exclusivos en el norte de México.',
+  description: defaultDescription,
   keywords: 'barrancas del cobre, creel, tren chepe, chihuahua, operadora turistica, sierra tarahumara, tour, paquete',
   authors: [{ name: 'Simatiri Experience' }],
   icons: {
     icon: '/a91a08f4-4f29-4022-9cc6-ee54b027a077.jpg',
     apple: '/a91a08f4-4f29-4022-9cc6-ee54b027a077.jpg',
   },
+  metadataBase: new URL(getBaseUrl()),
   openGraph: {
-    siteName: 'Simatiri Experience',
-    locale: 'es_MX',
-    type: 'website',
+    ...defaultShare.openGraph,
+  },
+  twitter: {
+    ...defaultShare.twitter,
   },
 }
 

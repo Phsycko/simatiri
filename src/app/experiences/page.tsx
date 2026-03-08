@@ -11,10 +11,15 @@ import { TourRecowataCard } from '@/components/experiences/TourRecowataCard'
 import { TourGuachochiYKokoyomeCard } from '@/components/experiences/TourGuachochiYKokoyomeCard'
 import { TourCerocahuiCard } from '@/components/experiences/TourCerocahuiCard'
 import { TourMaguarichiCard } from '@/components/experiences/TourMaguarichiCard'
+import { buildShareMeta } from '@/lib/metadata'
+
+const title = 'Experiencias y Tours | Simatiri Experience'
+const description = 'Tours y experiencias auténticas en la Sierra Tarahumara: Barrancas del Cobre, Tour Tarahumara, Basaseachi, Menonitas y más.'
 
 export const metadata: Metadata = {
-    title: 'Experiencias y Tours',
-    description: 'Tours y experiencias auténticas en la Sierra Tarahumara: Barrancas del Cobre, Tour Tarahumara, Basaseachi, Menonitas y más.',
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/experiences' }),
 }
 
 export default async function ExperiencesPage() {

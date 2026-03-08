@@ -4,9 +4,20 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Train, Calendar } from 'lucide-react'
 import { getRelatedPackageIds, getDestinationNameForSlug, normalizeSlug } from '@/lib/destination-related-packages'
+import type { Metadata } from 'next'
+import { buildShareMeta } from '@/lib/metadata'
 
 // Ensure this page is always server-rendered per request
 export const dynamic = 'force-dynamic'
+
+const title = 'Paquetes Tren CHEPE | Simatiri Experience'
+const description = 'Paquetes todo incluido por la Sierra Tarahumara: Tren CHEPE Express y Regional, hoteles, tours y traslados. Rutas Chihuahua, Creel, Divisadero, Los Mochis.'
+
+export const metadata: Metadata = {
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/packages' }),
+}
 
 // Static fallback when DB returns no packages (e.g. production without seed)
 const STATIC_PACKAGE_ROUTES: Record<number, string> = {

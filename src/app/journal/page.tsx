@@ -2,10 +2,15 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, BookOpen } from 'lucide-react'
 import { PageHero } from '@/components/ui/PageHero'
+import { buildShareMeta } from '@/lib/metadata'
+
+const title = 'Journal | Simatiri Experience'
+const description = 'Guías de viaje, consejos e historias desde la Sierra Tarahumara. Todo sobre Creel, Barrancas del Cobre, el Tren CHEPE y la cultura Rarámuri.'
 
 export const metadata: Metadata = {
-    title: 'Journal',
-    description: 'Guías de viaje, consejos e historias desde la Sierra Tarahumara. TODO sobre Creel, Barrancas del Cobre, el Tren CHEPE y la cultura Rarámuri.',
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/journal' }),
 }
 
 const articles = [

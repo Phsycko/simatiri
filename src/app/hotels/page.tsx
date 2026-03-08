@@ -6,10 +6,15 @@ import { VigenciaContactNew } from '@/components/hotels/VigenciaContactNew'
 import { HotelPanelSystem } from '@/components/hotels/HotelPanelSystem'
 import { PoliciesBlockNew } from '@/components/hotels/PoliciesBlockNew'
 import { ClosingBlockNew } from '@/components/hotels/ClosingBlockNew'
+import { buildShareMeta } from '@/lib/metadata'
+
+const title = 'Convenio Hotelero Preferencial | Simatiri Experience'
+const description = 'Tarifas preferenciales para tour operadoras. Convenio vigente y portafolio de hospedaje en la Sierra Tarahumara.'
 
 export const metadata: Metadata = {
-  title: 'Convenio Hotelero Preferencial',
-  description: 'Tarifas preferenciales para tour operadoras. Convenio vigente y portafolio de hospedaje.',
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/hotels' }),
 }
 
 /** Solo datos reales proporcionados. Sin ubicaciones ni copy inventado. */

@@ -12,10 +12,15 @@ import { TourRecowataHomeCard } from '@/components/home/TourRecowataHomeCard'
 import { TourGuachochiYKokoyomeHomeCard } from '@/components/home/TourGuachochiYKokoyomeHomeCard'
 import { TourCerocahuiHomeCard } from '@/components/home/TourCerocahuiHomeCard'
 import { TourMaguarichiHomeCard } from '@/components/home/TourMaguarichiHomeCard'
+import { buildShareMeta } from '@/lib/metadata'
+
+const title = 'SIMATIRI EXPERIENCE | Operadora Turística en las Barrancas del Cobre'
+const description = 'Operadora turística certificada en Creel y la Sierra Tarahumara. Paquetes CHEPE, tours y hoteles en el norte de México.'
 
 export const metadata: Metadata = {
-  title: 'SIMATIRI EXPERIENCE | Operadora Turística en las Barrancas del Cobre',
-  description: 'Operadora turística certificada en Creel y la Sierra Tarahumara. Paquetes CHEPE, tours y hoteles en el norte de México.',
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/' }),
 }
 
 const highlights = [

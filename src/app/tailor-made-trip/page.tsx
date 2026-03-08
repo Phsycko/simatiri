@@ -1,9 +1,14 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/ui/PageHero'
+import { buildShareMeta } from '@/lib/metadata'
+
+const title = 'Cotizar Viaje a la Medida | Simatiri Experience'
+const description = 'Diseña tu viaje perfecto por la Sierra Tarahumara con Simatiri Experience. Itinerarios personalizados, servicio concierge y atención exclusiva.'
 
 export const metadata: Metadata = {
-    title: 'Cotizar Viaje a la Medida',
-    description: 'Diseña tu viaje perfecto por la Sierra Tarahumara con Simatiri Experience. Itinerarios personalizados, servicio concierge y atención exclusiva.',
+  title,
+  description,
+  ...buildShareMeta({ title, description, pathname: '/tailor-made-trip' }),
 }
 
 const budgets = [
