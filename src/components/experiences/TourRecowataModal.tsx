@@ -69,12 +69,9 @@ export function TourRecowataModal({ isOpen, setIsOpen, tour }: TourRecowataModal
                             <div className="overflow-y-auto w-full max-h-full no-scrollbar">
                                 {/* Header con Imagen */}
                                 <div className="relative h-64 md:h-80 w-full bg-[#111]">
-                                    <Image src="/images/destinations/recowata.jpg" alt="Tour Recowata" fill sizes="(max-width: 768px) 100vw, 800px" className="w-full h-full object-cover opacity-90" />
+                                    <Image src="/images/experiences/tour-recowata-v2.jpg" alt="Tour Recowata" fill sizes="(max-width: 768px) 100vw, 800px" className="w-full h-full object-cover " />
                                     <div className="absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
                                     <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 pb-6 md:pb-8">
-                                        <div className="flex items-center gap-3 text-[#7B4B2A] text-xs font-semibold uppercase tracking-widest mb-3">
-                                            <MapPin size={14} /> Creel / Sierra Tarahumara
-                                        </div>
                                         <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#0a192f] leading-none mb-2">
                                             Tour Recowata
                                         </h2>

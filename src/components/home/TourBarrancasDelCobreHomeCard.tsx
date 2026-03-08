@@ -16,7 +16,7 @@ export function TourBarrancasDelCobreHomeCard({ tour }: { tour: any }) {
             >
                 <div className="aspect-video bg-gradient-to-br from-[#0a192f] to-[#2e4a3d] relative">
                     <div className="absolute inset-0 block">
-                        <Image src="/images/destinations/barrancas-del-cobre.jpg" alt="Tour Barrancas del Cobre" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-full object-cover mix-blend-overlay opacity-50" />
+                        <Image src="/images/experiences/tour-barrancas-del-cobre-v2.jpg" alt="Tour Barrancas del Cobre" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[0.33,1,0.68,1] group-hover:scale-110" />
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center relative z-10">
                         <MapPin className="text-white/20" size={48} strokeWidth={1} />

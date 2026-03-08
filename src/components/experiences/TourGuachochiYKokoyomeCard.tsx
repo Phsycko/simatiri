@@ -16,11 +16,11 @@ export function TourGuachochiYKokoyomeCard({ tour }: { tour: any }) {
                 onClick={() => setIsOpen(true)}
                 className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer text-left w-full"
             >
-                <div className="aspect-[4/3] bg-gradient-to-br from-[#2e4a3d] to-[#0a192f] relative">
+                <div className="aspect-[4/3] bg-[#181410] overflow-hidden relative">
                     <div className="absolute inset-0 block">
-                        <Image src="" alt="Tour Guachochi y Kokoyome" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-full object-cover mix-blend-overlay opacity-50" />
+                        <Image src="/images/experiences/tour-guachochi-kokoyome-v2.jpg" alt="Tour Guachochi y Kokoyome" fill sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[0.33,1,0.68,1] group-hover:scale-110" />
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent h-32" />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent h-[60%]" />
                     <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white/90 text-xs font-medium">
                         <Clock size={13} />
                         12 Horas

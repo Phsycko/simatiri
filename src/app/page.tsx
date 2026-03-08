@@ -50,30 +50,30 @@ export default async function HomePage() {
           fill
           priority
           sizes="100vw"
-          className="object-cover -z-20"
+          className="object-cover z-0"
         />
-        <div className="absolute inset-0 bg-black/55 pointer-events-none -z-10" />
+        <div className="absolute inset-0 bg-black/55 pointer-events-none z-10" />
         {/* Dot grid texture */}
         <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.04] z-10"
           style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '48px 48px' }}
         />
         {/* Top white fade for smooth navbar transition */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none z-10"
           style={{
             background: 'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 10%, rgba(255,255,255,0.7) 18%, rgba(255,255,255,0.4) 28%, rgba(255,255,255,0.15) 40%, rgba(255,255,255,0) 55%)'
           }}
         />
         {/* Bottom fade (Elegant forest green) */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 z-10"
           style={{
             background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 70%, rgba(10,35,22,0.55) 85%, rgba(4,18,12,0.92) 100%)'
           }}
         />
 
-        <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto">
+        <div className="relative z-20 flex flex-col items-center text-center px-6 max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white/70 text-xs uppercase tracking-widest font-medium mb-10">
             <span className="w-1.5 h-1.5 rounded-full bg-[#7B4B2A]" />
             Operadora Turística Certificada · Creel, Chihuahua
@@ -260,8 +260,8 @@ export default async function HomePage() {
 
       {/* CTA AGENCIAS */}
       <section className="py-28 px-8">
-        <div className="max-w-5xl mx-auto bg-[#0a192f] rounded-3xl p-12 md:p-20 text-white text-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#7B4B2A]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <div className="max-w-5xl mx-auto bg-[#261510] rounded-3xl p-12 md:p-20 text-white text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#7B4B2A]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="relative z-10">
             <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-4">Para Agencias de Viaje</div>
             <h2 className="font-serif text-4xl md:text-5xl mb-6">Convenio corporativo<br />con beneficios reales.</h2>
