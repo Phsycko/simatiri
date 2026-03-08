@@ -126,7 +126,7 @@ export function HotelPanelSystem({ hotels }: Props) {
                   </div>
 
                   {active.note && (
-                    <div className="mt-8 py-4 px-4 rounded-lg bg-[#2e4a3d]/20 border border-[#2e4a3d]/30">
+                    <div className="mt-8 py-4 px-4 rounded-lg bg-[#7B4B2A]/25 border border-[#7B4B2A]/40">
                       <p className="text-sm font-medium text-[#FAF5EF]/90 text-center">
                         {active.note}
                       </p>

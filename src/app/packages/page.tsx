@@ -31,24 +31,117 @@ const STATIC_PACKAGE_ROUTES: Record<number, string> = {
     15: 'Chihuahua → Creel → Los Mochis', 16: 'El Fuerte → Creel → El Fuerte',
     17: 'El Fuerte → Creel → El Fuerte',
 }
-const STATIC_PACKAGES: Array<{ id: number; title: string; durationDays: number; trainClass: string; description: string; prices: never[] }> = [
-    { id: 1, title: 'Paquete 1', durationDays: 7, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[1], prices: [] },
-    { id: 2, title: 'Paquete 2', durationDays: 6, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[2], prices: [] },
-    { id: 3, title: 'Paquete 3', durationDays: 5, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[3], prices: [] },
-    { id: 4, title: 'Paquete 4', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[4], prices: [] },
-    { id: 5, title: 'Paquete 5', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[5], prices: [] },
-    { id: 6, title: 'Paquete 6', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[6], prices: [] },
-    { id: 7, title: 'Paquete 7', durationDays: 3, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[7], prices: [] },
-    { id: 8, title: 'Paquete 8', durationDays: 3, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[8], prices: [] },
-    { id: 9, title: 'Paquete 9', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[9], prices: [] },
-    { id: 10, title: 'Paquete 10', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[10], prices: [] },
-    { id: 11, title: 'Paquete 11', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[11], prices: [] },
-    { id: 12, title: 'Paquete 12', durationDays: 5, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[12], prices: [] },
-    { id: 13, title: 'Paquete 13', durationDays: 7, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[13], prices: [] },
-    { id: 14, title: 'Paquete 14', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[14], prices: [] },
-    { id: 15, title: 'Paquete 15', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[15], prices: [] },
-    { id: 16, title: 'Paquete 16', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[16], prices: [] },
-    { id: 17, title: 'Paquete 17', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[17], prices: [] },
+
+type StaticPrice = { id: number; occupancyType: string; pricePerPerson: number; isUpgrade?: boolean }
+
+/** Precios de referencia por paquete para fallback cuando no hay DB (producción sin seed). */
+const STATIC_PACKAGE_PRICES: Record<number, StaticPrice[]> = {
+    1: [
+        { id: 101, occupancyType: 'DOBLE', pricePerPerson: 27700 },
+        { id: 102, occupancyType: 'TRIPLE', pricePerPerson: 25400 },
+        { id: 103, occupancyType: 'CUADRUPLE', pricePerPerson: 24000 },
+    ],
+    2: [
+        { id: 201, occupancyType: 'DOBLE', pricePerPerson: 10400 },
+        { id: 202, occupancyType: 'TRIPLE', pricePerPerson: 9470 },
+        { id: 203, occupancyType: 'CUADRUPLE', pricePerPerson: 9100 },
+        { id: 204, occupancyType: 'DOBLE', pricePerPerson: 11400, isUpgrade: true },
+    ],
+    3: [
+        { id: 301, occupancyType: 'DOBLE', pricePerPerson: 9500 },
+        { id: 302, occupancyType: 'TRIPLE', pricePerPerson: 8700 },
+        { id: 303, occupancyType: 'CUADRUPLE', pricePerPerson: 8200 },
+    ],
+    4: [
+        { id: 401, occupancyType: 'DOBLE', pricePerPerson: 12400 },
+        { id: 402, occupancyType: 'TRIPLE', pricePerPerson: 11200 },
+        { id: 403, occupancyType: 'CUADRUPLE', pricePerPerson: 10600 },
+    ],
+    5: [
+        { id: 501, occupancyType: 'DOBLE', pricePerPerson: 8200 },
+        { id: 502, occupancyType: 'TRIPLE', pricePerPerson: 7500 },
+        { id: 503, occupancyType: 'CUADRUPLE', pricePerPerson: 7100 },
+    ],
+    6: [
+        { id: 601, occupancyType: 'DOBLE', pricePerPerson: 10800 },
+        { id: 602, occupancyType: 'TRIPLE', pricePerPerson: 9900 },
+        { id: 603, occupancyType: 'CUADRUPLE', pricePerPerson: 9400 },
+    ],
+    7: [
+        { id: 701, occupancyType: 'DOBLE', pricePerPerson: 6900 },
+        { id: 702, occupancyType: 'TRIPLE', pricePerPerson: 6300 },
+        { id: 703, occupancyType: 'CUADRUPLE', pricePerPerson: 6000 },
+    ],
+    8: [
+        { id: 801, occupancyType: 'DOBLE', pricePerPerson: 9200 },
+        { id: 802, occupancyType: 'TRIPLE', pricePerPerson: 8400 },
+        { id: 803, occupancyType: 'CUADRUPLE', pricePerPerson: 8000 },
+    ],
+    9: [
+        { id: 901, occupancyType: 'DOBLE', pricePerPerson: 11500 },
+        { id: 902, occupancyType: 'TRIPLE', pricePerPerson: 10500 },
+        { id: 903, occupancyType: 'CUADRUPLE', pricePerPerson: 9900 },
+    ],
+    10: [
+        { id: 1001, occupancyType: 'DOBLE', pricePerPerson: 8900 },
+        { id: 1002, occupancyType: 'TRIPLE', pricePerPerson: 8100 },
+        { id: 1003, occupancyType: 'CUADRUPLE', pricePerPerson: 7700 },
+    ],
+    11: [
+        { id: 1101, occupancyType: 'DOBLE', pricePerPerson: 10200 },
+        { id: 1102, occupancyType: 'TRIPLE', pricePerPerson: 9300 },
+        { id: 1103, occupancyType: 'CUADRUPLE', pricePerPerson: 8800 },
+    ],
+    12: [
+        { id: 1201, occupancyType: 'DOBLE', pricePerPerson: 9800 },
+        { id: 1202, occupancyType: 'TRIPLE', pricePerPerson: 9000 },
+        { id: 1203, occupancyType: 'CUADRUPLE', pricePerPerson: 8500 },
+    ],
+    13: [
+        { id: 1301, occupancyType: 'DOBLE', pricePerPerson: 13200 },
+        { id: 1302, occupancyType: 'TRIPLE', pricePerPerson: 12100 },
+        { id: 1303, occupancyType: 'CUADRUPLE', pricePerPerson: 11500 },
+    ],
+    14: [
+        { id: 1401, occupancyType: 'DOBLE', pricePerPerson: 15800 },
+        { id: 1402, occupancyType: 'TRIPLE', pricePerPerson: 14500 },
+        { id: 1403, occupancyType: 'CUADRUPLE', pricePerPerson: 13800 },
+    ],
+    15: [
+        { id: 1501, occupancyType: 'DOBLE', pricePerPerson: 12800 },
+        { id: 1502, occupancyType: 'TRIPLE', pricePerPerson: 11700 },
+        { id: 1503, occupancyType: 'CUADRUPLE', pricePerPerson: 11100 },
+    ],
+    16: [
+        { id: 1601, occupancyType: 'DOBLE', pricePerPerson: 11200 },
+        { id: 1602, occupancyType: 'TRIPLE', pricePerPerson: 10200 },
+        { id: 1603, occupancyType: 'CUADRUPLE', pricePerPerson: 9700 },
+    ],
+    17: [
+        { id: 1701, occupancyType: 'DOBLE', pricePerPerson: 9800 },
+        { id: 1702, occupancyType: 'TRIPLE', pricePerPerson: 9000 },
+        { id: 1703, occupancyType: 'CUADRUPLE', pricePerPerson: 8500 },
+    ],
+}
+
+const STATIC_PACKAGES: Array<{ id: number; title: string; durationDays: number; trainClass: string; description: string; prices: StaticPrice[] }> = [
+    { id: 1, title: 'Paquete 1', durationDays: 7, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[1], prices: STATIC_PACKAGE_PRICES[1] ?? [] },
+    { id: 2, title: 'Paquete 2', durationDays: 6, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[2], prices: STATIC_PACKAGE_PRICES[2] ?? [] },
+    { id: 3, title: 'Paquete 3', durationDays: 5, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[3], prices: STATIC_PACKAGE_PRICES[3] ?? [] },
+    { id: 4, title: 'Paquete 4', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[4], prices: STATIC_PACKAGE_PRICES[4] ?? [] },
+    { id: 5, title: 'Paquete 5', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[5], prices: STATIC_PACKAGE_PRICES[5] ?? [] },
+    { id: 6, title: 'Paquete 6', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[6], prices: STATIC_PACKAGE_PRICES[6] ?? [] },
+    { id: 7, title: 'Paquete 7', durationDays: 3, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[7], prices: STATIC_PACKAGE_PRICES[7] ?? [] },
+    { id: 8, title: 'Paquete 8', durationDays: 3, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[8], prices: STATIC_PACKAGE_PRICES[8] ?? [] },
+    { id: 9, title: 'Paquete 9', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[9], prices: STATIC_PACKAGE_PRICES[9] ?? [] },
+    { id: 10, title: 'Paquete 10', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[10], prices: STATIC_PACKAGE_PRICES[10] ?? [] },
+    { id: 11, title: 'Paquete 11', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[11], prices: STATIC_PACKAGE_PRICES[11] ?? [] },
+    { id: 12, title: 'Paquete 12', durationDays: 5, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[12], prices: STATIC_PACKAGE_PRICES[12] ?? [] },
+    { id: 13, title: 'Paquete 13', durationDays: 7, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[13], prices: STATIC_PACKAGE_PRICES[13] ?? [] },
+    { id: 14, title: 'Paquete 14', durationDays: 5, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[14], prices: STATIC_PACKAGE_PRICES[14] ?? [] },
+    { id: 15, title: 'Paquete 15', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[15], prices: STATIC_PACKAGE_PRICES[15] ?? [] },
+    { id: 16, title: 'Paquete 16', durationDays: 4, trainClass: 'CHEPE Express', description: STATIC_PACKAGE_ROUTES[16], prices: STATIC_PACKAGE_PRICES[16] ?? [] },
+    { id: 17, title: 'Paquete 17', durationDays: 4, trainClass: 'CHEPE Regional', description: STATIC_PACKAGE_ROUTES[17], prices: STATIC_PACKAGE_PRICES[17] ?? [] },
 ]
 
 // Map each package id to its image path
