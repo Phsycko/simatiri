@@ -178,7 +178,8 @@ export default async function PackagesPage({
                 overlay="linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.05) 100%)"
             />
 
-            <section className="py-20 px-8 max-w-7xl mx-auto">
+            <section className="w-full bg-[#FFF8F5]">
+                <div className="py-20 px-8 max-w-7xl mx-auto">
                 {debug && (
                     <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-left font-mono text-xs text-amber-900">
                         <div className="font-semibold mb-2">[Debug] Paquetes por destino</div>
@@ -226,7 +227,7 @@ export default async function PackagesPage({
                             <Link
                                 key={pkg.id}
                                 href={href}
-                                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
+                                className="group bg-white border border-[#DDD8D2] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(28,24,18,0.06),0_12px_32px_rgba(28,24,18,0.12)] hover:shadow-[0_8px_24px_rgba(28,24,18,0.08),0_24px_56px_rgba(28,24,18,0.14)] hover:border-[#D0CBC4] transition-all duration-300"
                             >
                                 {/* Image container – uses next/image for automatic WebP + lazy load */}
                                 <div className="h-52 relative overflow-hidden bg-gradient-to-br from-[#1a3324] to-[#2e1a10]">
@@ -288,6 +289,7 @@ export default async function PackagesPage({
                         </div>
                     )}
                 </div>
+            </div>
             </section>
         </>
     )

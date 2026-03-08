@@ -40,8 +40,8 @@ export default async function ExperiencesPage() {
                 overlay="linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.42))"
             />
 
-            <section className="py-20 px-8 max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <section className="w-full bg-[#FFF8F5]">
+                <div className="py-20 px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {tours.map((tour: any) => {
                         if (tour.title === 'Tour Tarahumara') {
                             return <TourTarahumaraCard key={tour.id} tour={tour} />
@@ -74,7 +74,7 @@ export default async function ExperiencesPage() {
                             <Link
                                 key={tour.id}
                                 href={`/experiences/${tour.id}`}
-                                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300"
+                                className="group bg-white border border-[#DDD8D2] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(28,24,18,0.06),0_12px_32px_rgba(28,24,18,0.12)] hover:shadow-[0_8px_24px_rgba(28,24,18,0.08),0_24px_56px_rgba(28,24,18,0.14)] hover:border-[#D0CBC4] transition-all duration-300"
                             >
                                 <div className="aspect-[4/3] bg-gradient-to-br from-[#2e4a3d] to-[#0a192f] relative">
                                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent h-24" />

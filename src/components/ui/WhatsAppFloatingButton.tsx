@@ -108,7 +108,7 @@ export function WhatsAppFloatingButton() {
               : '0 1px 0 0 rgba(255,255,255,0.9) inset, 0 4px 12px rgba(28,24,18,0.08), 0 12px 32px rgba(28,24,18,0.12)',
           }}
           whileTap={{ scale: 0.97 }}
-          className={`flex items-center rounded-full border border-[#E5DDD4]/90 bg-[#FBF9F6] backdrop-blur-md text-[#1C1812] transition-colors duration-200 hover:border-[#D4C9BC] focus:outline-none focus:ring-2 focus:ring-[#7B4B2A]/30 focus:ring-offset-2 focus:ring-offset-[#FBF9F6] min-w-0 overflow-hidden min-h-[48px] sm:min-h-0 ${compact ? 'justify-center min-w-[48px]' : 'justify-center sm:justify-start gap-2.5'}`}
+          className={`flex items-center rounded-full border-2 border-[#D4C9BC] bg-[#FBF9F6] backdrop-blur-md text-[#1C1812] transition-colors duration-200 hover:border-[#C4B8A8] focus:outline-none focus:ring-2 focus:ring-[#7B4B2A]/30 focus:ring-offset-2 focus:ring-offset-[#FBF9F6] min-w-0 overflow-hidden min-h-[48px] sm:min-h-0 ${compact ? 'justify-center min-w-[48px]' : 'justify-center sm:justify-start gap-2.5'}`}
         >
           <span className="shrink-0 flex items-center justify-center text-[#7B4B2A]">
             <ShareIconRefined

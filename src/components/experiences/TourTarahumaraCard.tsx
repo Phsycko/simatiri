@@ -13,7 +13,7 @@ export function TourTarahumaraCard({ tour }: { tour: any }) {
             {/* CARD ESTÁNDAR, PERO SIN CAMBIO DE RUTA */}
             <div
                 onClick={() => setIsOpen(true)}
-                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer text-left w-full"
+                className="group bg-white border border-[#DDD8D2] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(28,24,18,0.06),0_12px_32px_rgba(28,24,18,0.12)] hover:shadow-[0_8px_24px_rgba(28,24,18,0.08),0_24px_56px_rgba(28,24,18,0.14)] hover:border-[#D0CBC4] transition-all duration-300 cursor-pointer text-left w-full"
             >
                 <div className="aspect-[4/3] bg-[#181410] overflow-hidden relative">
                     <div className="absolute inset-0 block">
