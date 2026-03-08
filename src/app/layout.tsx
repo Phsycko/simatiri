@@ -26,6 +26,10 @@ export const metadata: Metadata = {
     'Operadora turística certificada especializada en la Sierra Tarahumara, Creel, el Tren CHEPE y las Barrancas del Cobre. Paquetes, tours y hoteles exclusivos en el norte de México.',
   keywords: 'barrancas del cobre, creel, tren chepe, chihuahua, operadora turistica, sierra tarahumara, tour, paquete',
   authors: [{ name: 'Simatiri Experience' }],
+  icons: {
+    icon: '/a91a08f4-4f29-4022-9cc6-ee54b027a077.jpg',
+    apple: '/a91a08f4-4f29-4022-9cc6-ee54b027a077.jpg',
+  },
   openGraph: {
     siteName: 'Simatiri Experience',
     locale: 'es_MX',

@@ -29,10 +29,11 @@ export default function TailorMadeTripPage() {
     return (
         <>
             <PageHero
-                label="Viaje a la Medida"
                 title="Tu viaje, diseñado sin compromisos"
                 subtitle="Cuéntanos tu sueño. Nuestros especialistas diseñan el itinerario, seleccionan los hoteles y coordinan cada detalle para que tú solo te ocupes de disfrutar."
                 size="md"
+                backgroundImage="https://drive.google.com/uc?export=view&id=1TBUt5ejzTNg4aIVSRCYMTYxveJo9TjH1"
+                overlay="linear-gradient(rgba(0,0,0,0.36), rgba(0,0,0,0.42))"
             />
 
             <section className="py-20 px-8">
