@@ -70,11 +70,11 @@ export function Footer() {
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone size={15} className="shrink-0 text-[#8FAF9F]" />
-                                <a href="tel:+526281000000" className="text-[#D9E2DE] hover:text-[#8FAF9F] transition-colors">+52 628 100 0000</a>
+                                <a href="tel:+526142528190" className="text-[#D9E2DE] hover:text-[#8FAF9F] transition-colors">+52 614 252 8190</a>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail size={15} className="shrink-0 text-[#8FAF9F]" />
-                                <a href="mailto:info@simatiri.com" className="text-[#D9E2DE] hover:text-[#8FAF9F] transition-colors">info@simatiri.com</a>
+                                <a href="mailto:ventas@simatiri.com" className="text-[#D9E2DE] hover:text-[#8FAF9F] transition-colors">ventas@simatiri.com</a>
                             </li>
                         </ul>
                     </div>
