@@ -5,6 +5,9 @@ import Image from 'next/image'
 import { Train, Calendar } from 'lucide-react'
 import { getRelatedPackageIds, getDestinationNameForSlug } from '@/lib/destination-related-packages'
 
+// Ensure this page is always server-rendered per request (no static empty list when DB is unavailable at build)
+export const dynamic = 'force-dynamic'
+
 // Map each package id to its image path
 const packageImages: Record<number, string> = {
     1: '/images/paquetes/paquete-1-hero.jpg',
@@ -87,11 +90,22 @@ export default async function PackagesPage({
     if (!Array.isArray(packages)) packages = []
 
     const relatedIdsSet =
-        relatedIds.length > 0 ? new Set(relatedIds.map((id) => Number(id))) : null
-    const displayedPackages =
+        relatedIds.length > 0 ? new Set<number>(relatedIds.map((id) => Number(id))) : null
+
+    let displayedPackages: typeof packages =
         relatedIdsSet != null && relatedIdsSet.size > 0
-            ? packages.filter((p) => p != null && relatedIdsSet.has(Number(p.id)))
+            ? packages.filter((p) => p != null && relatedIdsSet!.has(Number(p.id)))
             : packages
+
+    // Fallback: if we have packages from DB but filter returned none (e.g. id mismatch), show all so we never hide existing packages
+    if (
+        destinoSlug &&
+        relatedIds.length > 0 &&
+        packages.length > 0 &&
+        displayedPackages.length === 0
+    ) {
+        displayedPackages = packages
+    }
 
     return (
         <>
