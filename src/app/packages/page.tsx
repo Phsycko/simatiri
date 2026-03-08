@@ -142,6 +142,7 @@ export default async function PackagesPage({
 
     let dataSource: 'db' | 'static' = 'db'
 
+    // Filtro activo pero DB vacía: usar lista estática filtrada
     if (packages.length === 0 && destinoSlug && relatedIds.length > 0) {
         const staticFiltered = STATIC_PACKAGES.filter((p) => relatedIdsSet!.has(p.id))
         if (staticFiltered.length > 0) {
@@ -150,6 +151,13 @@ export default async function PackagesPage({
         }
     }
 
+    // Sin filtro (entrada directa desde navbar) y DB vacía: mostrar todos los paquetes estáticos
+    if (packages.length === 0 && !destinoSlug) {
+        displayedPackages = STATIC_PACKAGES as unknown as typeof packages
+        dataSource = 'static'
+    }
+
+    // Filtro activo, DB con datos, pero ningún paquete coincide: mostrar todos (fallback amigable)
     if (
         dataSource === 'db' &&
         destinoSlug &&
