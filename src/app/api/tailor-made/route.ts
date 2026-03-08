@@ -91,9 +91,10 @@ export async function POST(req: NextRequest) {
       const body = raw as ContactPayload
       const nombre = (body.nombre ?? '').toString().trim()
       const correo = (body.correo ?? '').toString().trim()
-      if (!nombre || !correo) {
+      const telefono = (body.telefono ?? '').toString().trim()
+      if (!nombre || !correo || !telefono) {
         return NextResponse.json(
-          { error: 'Nombre y correo son obligatorios' },
+          { error: 'Nombre, correo y teléfono son obligatorios' },
           { status: 400 }
         )
       }

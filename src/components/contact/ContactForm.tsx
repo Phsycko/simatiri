@@ -22,9 +22,10 @@ export function ContactForm() {
 
     const nombre = (fd.get('nombre') as string)?.trim()
     const correo = (fd.get('correo') as string)?.trim()
-    if (!nombre || !correo) {
+    const telefono = (fd.get('telefono') as string)?.trim()
+    if (!nombre || !correo || !telefono) {
       setStatus('error')
-      setErrorMessage('Por favor completa nombre y correo electrónico.')
+      setErrorMessage('Por favor completa nombre, correo electrónico y teléfono.')
       return
     }
 
@@ -33,7 +34,7 @@ export function ContactForm() {
       nombre,
       correo,
       tipoConsulta: (fd.get('tipoConsulta') as string)?.trim() || '',
-      telefono: (fd.get('telefono') as string)?.trim() || '',
+      telefono,
       mensaje: (fd.get('mensaje') as string)?.trim() || '',
     }
 
@@ -106,10 +107,11 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Teléfono (opcional)</label>
+        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Teléfono</label>
         <input
           name="telefono"
           type="tel"
+          required
           disabled={isLoading}
           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#0a192f] transition-colors disabled:opacity-60"
           placeholder="+52 XXX XXX XXXX"
