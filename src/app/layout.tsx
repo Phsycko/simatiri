@@ -37,7 +37,9 @@ export const metadata: Metadata = {
   keywords: 'barrancas del cobre, creel, tren chepe, chihuahua, operadora turistica, sierra tarahumara, tour, paquete',
   authors: [{ name: 'Simatiri Experience' }],
   icons: {
-    icon: '/a91a08f4-4f29-4022-9cc6-ee54b027a077.jpg',
+    icon: [
+      { url: '/a91a08f4-4f29-4022-9cc6-ee54b027a077.jpg', type: 'image/jpeg', sizes: 'any' },
+    ],
     apple: '/a91a08f4-4f29-4022-9cc6-ee54b027a077.jpg',
   },
   metadataBase: new URL(getBaseUrl()),
