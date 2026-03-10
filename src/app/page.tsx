@@ -38,16 +38,35 @@ export default async function HomePage() {
     { icon: Users, label: t('home.highlightAgencias'), sub: t('home.highlightAgenciasSub') },
   ]
 
-  const packages = await prisma.package.findMany({
-    include: { prices: { where: { occupancyType: 'DOBLE', isUpgrade: false } } },
-    orderBy: { id: 'asc' },
-    take: 3,
-  })
+  let packages: Array<{ id: number; title: string; durationDays: number; trainClass: string | null; prices: Array<{ pricePerPerson: number }> }>
+  let tours: Array<{ id: number; title: string; durationHours: number; tierPrices: Array<{ pricePerPerson: number }> }>
 
-  const tours = await prisma.tour.findMany({
-    include: { tierPrices: { orderBy: { minPax: 'asc' }, take: 1 } },
-    take: 3,
-  })
+  try {
+    const [packagesData, toursData] = await Promise.all([
+      prisma.package.findMany({
+        include: { prices: { where: { occupancyType: 'DOBLE', isUpgrade: false } } },
+        orderBy: { id: 'asc' },
+        take: 3,
+      }),
+      prisma.tour.findMany({
+        include: { tierPrices: { orderBy: { minPax: 'asc' }, take: 1 } },
+        take: 3,
+      }),
+    ])
+    packages = packagesData
+    tours = toursData
+  } catch (_err) {
+    packages = [
+      { id: 1, title: 'Paquete 1', durationDays: 7, trainClass: 'CHEPE EXPRESS PRIMERA CLASE', prices: [{ pricePerPerson: 27700 }] },
+      { id: 2, title: 'Paquete 2', durationDays: 6, trainClass: 'CHEPE REGIONAL', prices: [{ pricePerPerson: 10400 }] },
+      { id: 3, title: 'Paquete 3', durationDays: 5, trainClass: 'CHEPE REGIONAL', prices: [{ pricePerPerson: 8350 }] },
+    ]
+    tours = [
+      { id: 1, title: 'Tour Tarahumara', durationHours: 5, tierPrices: [{ pricePerPerson: 1000 }] },
+      { id: 2, title: 'Tour Barrancas del Cobre', durationHours: 5, tierPrices: [{ pricePerPerson: 1000 }] },
+      { id: 3, title: 'Tour Basaseachi', durationHours: 10, tierPrices: [{ pricePerPerson: 1700 }] },
+    ]
+  }
 
   return (
     <div className="flex flex-col w-full">
