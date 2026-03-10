@@ -203,3 +203,19 @@ model Payment {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 }
+
+// -----------------------------------------------------------------------------
+// AVAILABILITY & DATE BLOCKING (internal, no external calendar)
+// -----------------------------------------------------------------------------
+
+model AvailabilityBlock {
+  id        Int      @id @default(autoincrement())
+  startDate DateTime // Start of day (UTC) for the first blocked date
+  endDate   DateTime // End of day (UTC) for the last blocked date
+  status    String   @default("blocked") // blocked | available (only if needed; default = blocked)
+  blockType String?  // reservado | mantenimiento | interno | no_disponible | otro
+  reason    String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

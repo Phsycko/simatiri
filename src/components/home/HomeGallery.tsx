@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, Images } from 'lucide-react'
+import { useTranslation } from '@/contexts/LocaleContext'
 
 const PREVIEW_COUNT = 4
 
@@ -15,6 +16,7 @@ type HomeGalleryProps = {
 
 export function HomeGallery({ images, previewMode = false }: HomeGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const { t } = useTranslation()
 
   const goPrev = useCallback(() => {
     if (selectedIndex === null) return
@@ -148,8 +150,8 @@ export function HomeGallery({ images, previewMode = false }: HomeGalleryProps) {
             <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors duration-300" />
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 z-10">
               <Images className="text-white drop-shadow-md group-hover:drop-shadow-lg transition-all shrink-0" size={24} strokeWidth={1.5} />
-              <span className="text-white text-xs md:text-sm font-semibold uppercase tracking-wider drop-shadow-md">Explorar colección</span>
-              <span className="text-white/90 text-[10px] md:text-xs drop-shadow-sm">{images.length} imágenes</span>
+              <span className="text-white text-xs md:text-sm font-semibold uppercase tracking-wider drop-shadow-md">{t('home.galleryExplorarColeccion')}</span>
+              <span className="text-white/90 text-[10px] md:text-xs drop-shadow-sm">{images.length} {t('home.galleryImagenes')}</span>
             </div>
           </button>
         </div>

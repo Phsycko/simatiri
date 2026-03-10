@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navigation2, Wind, Mountain, Waves, Train, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslation } from '@/contexts/LocaleContext';
+import { messages, getNested } from '@/lib/i18n';
 
 const ROUTE_STOPS = [
     { id: 'mochis', name: 'Los Mochis', x: 10, y: 85, subtitle: "Inicio del recorrido", desc: "Puerta de entrada desde el Pacífico. Sus llanuras costeras preparan al viajero para el ascenso dramático hacia la Sierra Tarahumara.", highlights: ["Conexión Pacífico", "Gastronomía del mar", "Bahía Topolobampo"] },
@@ -21,8 +23,17 @@ const SECONDARY_STOPS = [
     { id: 'maguarichi', name: 'Maguarichi', x: 52, y: 32, icon: Wind },
 ];
 
-// Curvaceous path connecting the main stops precisely through their coordinates
-const SVG_PATH_D = "M 10 85 C 15 75, 20 68, 25 65 C 35 60, 40 58, 45 55 C 50 52, 52 50, 55 48 C 60 42, 63 40, 67 38 C 75 34, 78 32, 82 30 C 88 24, 92 18, 95 15";
+// Curvaceous path connecting the main stops precisely through their coordinates.
+// Segmentos del path para que la línea animada termine exactamente en cada estación.
+const PATH_SEGMENTS = [
+    "M 10 85 C 15 75, 20 68, 25 65",           // Los Mochis → El Fuerte
+    "C 35 60, 40 58, 45 55",                   // → Cerocahui
+    "C 50 52, 52 50, 55 48",                   // → Divisadero
+    "C 60 42, 63 40, 67 38",                   // → Creel
+    "C 75 34, 78 32, 82 30",                   // → Cuauhtémoc
+    "C 88 24, 92 18, 95 15",                   // → Chihuahua
+];
+const SVG_PATH_D = PATH_SEGMENTS.join(" ");
 
 const variants = {
     enter: (direction: number) => {
@@ -54,6 +65,13 @@ const variants = {
 export default function RouteExperienceSection() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [tuple, setTuple] = useState([0, activeIndex]);
+    const { t, locale } = useTranslation();
+
+    const stopsI18n = getNested(messages[locale], 'home.routeStops') as Record<string, { name: string; subtitle: string; desc: string; highlights: string[] }> | undefined;
+    const displayStops = useMemo(() => ROUTE_STOPS.map((stop) => ({
+        ...stop,
+        ...(stopsI18n?.[stop.id] ?? {}),
+    })), [stopsI18n]);
 
     if (tuple[1] !== activeIndex) {
         setTuple([tuple[1], activeIndex]);
@@ -73,9 +91,9 @@ export default function RouteExperienceSection() {
     };
 
     const activeStopId = ROUTE_STOPS[activeIndex].id;
-    const currentStop = ROUTE_STOPS[activeIndex];
+    const currentStop = displayStops[activeIndex];
 
-    const pathProgress = activeIndex / (ROUTE_STOPS.length - 1);
+    const pathToCurrentStop = PATH_SEGMENTS.slice(0, activeIndex + 1).join(" ");
 
     return (
         <section className="bg-[#FFFFFF] w-full text-[#111111] relative py-20 pb-20 overflow-hidden">
@@ -85,8 +103,8 @@ export default function RouteExperienceSection() {
             <div className="max-w-[1400px] mx-auto px-6 relative z-10 w-full flex flex-col justify-center gap-8 lg:gap-16">
 
                 <div className="text-center md:text-left pt-6 px-4 mb-4">
-                    <h2 className="text-[#444444] uppercase tracking-[0.3em] text-xs font-semibold mb-2">Mapa Interactivo</h2>
-                    <h3 className="font-serif text-3xl md:text-5xl lg:text-6xl tracking-tight text-[#111111] drop-shadow-sm">Explora la Ruta CHEPE</h3>
+                    <h2 className="text-[#444444] uppercase tracking-[0.3em] text-xs font-semibold mb-2">{t('home.routeMapTitle')}</h2>
+                    <h3 className="font-serif text-3xl md:text-5xl lg:text-6xl tracking-tight text-[#111111] drop-shadow-sm">{t('home.routeExploreTitle')}</h3>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 w-full lg:min-h-[600px]">
@@ -112,16 +130,16 @@ export default function RouteExperienceSection() {
                                         strokeDasharray="1 1"
                                     />
 
-                                    {/* Animated Glowing track line */}
+                                    {/* Animated Glowing track line — termina exactamente en la estación actual */}
                                     <motion.path
-                                        d={SVG_PATH_D}
+                                        d={pathToCurrentStop}
                                         fill="none"
                                         stroke="#C6A46A"
                                         strokeWidth="1"
-                                        strokeLinecap="round"
+                                        strokeLinecap="butt"
                                         strokeLinejoin="round"
                                         initial={{ pathLength: 0 }}
-                                        animate={{ pathLength: pathProgress }}
+                                        animate={{ pathLength: 1 }}
                                         transition={{ duration: 0.8, ease: 'easeInOut' }}
                                         className="drop-shadow-[0_0_8px_rgba(198,164,106,0.6)]"
                                     />
@@ -136,7 +154,7 @@ export default function RouteExperienceSection() {
                                     ))}
 
                                     {/* Main Stops Nodes */}
-                                    {ROUTE_STOPS.map((stop, i) => {
+                                    {displayStops.map((stop, i) => {
                                         const isActive = stop.id === activeStopId;
                                         const isPast = activeIndex >= i;
 
@@ -171,13 +189,13 @@ export default function RouteExperienceSection() {
                                                     {stop.name}
                                                 </text>
 
-                                                {/* Train Indicator */}
+                                                {/* Train Indicator — centrado exactamente sobre el marcador de la estación */}
                                                 {isActive && (
                                                     <motion.g
                                                         layoutId="trainIndicator"
-                                                        transform={`translate(${stop.x - 2}, ${stop.y - 4})`}
+                                                        transform={`translate(${stop.x - 2}, ${stop.y - 2})`}
                                                         className="drop-shadow-[0_0_10px_rgba(212,176,122,0.8)]"
-                                                        transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                                                        transition={{ type: "spring", stiffness: 120, damping: 22 }}
                                                     >
                                                         <rect width="4" height="4" rx="1" fill="#D4B07A" />
                                                         <Train x="0.5" y="0.5" width="3" height="3" color="#1A3324" />
@@ -192,7 +210,7 @@ export default function RouteExperienceSection() {
                             {/* Legend / Overlay info */}
                             <div className="absolute bottom-6 left-6 flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hidden md:flex">
                                 <Navigation2 size={14} className="text-[#C6A46A]" />
-                                <span className="text-xs text-white/70 uppercase tracking-widest">Norte / Sierra Madre Occidental</span>
+                                <span className="text-xs text-white/70 uppercase tracking-widest">{t('home.routeNorteSierra')}</span>
                             </div>
                         </div>
                     </div>
@@ -223,7 +241,7 @@ export default function RouteExperienceSection() {
                                     >
                                         <div className="flex justify-between items-center mb-3">
                                             <div className="text-[#C6A46A] text-xs uppercase tracking-widest font-semibold flex items-center gap-2">
-                                                Parada {activeIndex + 1} de {ROUTE_STOPS.length} <span className="w-1 h-1 rounded-full bg-[#C6A46A]/50 inline-block"></span> {currentStop.subtitle}
+                                                {t('home.routeParadaDe')} {activeIndex + 1} {t('home.routeDe')} {ROUTE_STOPS.length} <span className="w-1 h-1 rounded-full bg-[#C6A46A]/50 inline-block"></span> {currentStop.subtitle}
                                             </div>
                                         </div>
                                         <h4 className="font-serif text-3xl md:text-4xl text-[#F5F5F5] mb-5">{currentStop.name}</h4>
@@ -241,7 +259,7 @@ export default function RouteExperienceSection() {
                                         </div>
 
                                         <Link href="/packages" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#C6A46A] hover:text-[#F5F5F5] transition-colors group">
-                                            Ver paquetes desde aquí
+                                            {t('home.routeVerPaquetesDesdeAqui')}
                                             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                                         </Link>
 
@@ -255,7 +273,7 @@ export default function RouteExperienceSection() {
                                     onClick={handlePrev}
                                     disabled={activeIndex === 0}
                                     className={`w-14 h-14 rounded-full border flex items-center justify-center transition-all ${activeIndex === 0 ? 'border-black/5 opacity-30 cursor-not-allowed text-[#111111]/40' : 'border-black/10 hover:border-[#8B5A2B] hover:bg-[#8B5A2B]/5 text-[#111111] hover:text-[#8B5A2B] cursor-pointer'}`}
-                                    aria-label="Parada anterior"
+                                    aria-label={t('home.routeParadaAnterior')}
                                 >
                                     <ChevronLeft size={24} />
                                 </button>
@@ -268,7 +286,7 @@ export default function RouteExperienceSection() {
                                     onClick={handleNext}
                                     disabled={activeIndex === ROUTE_STOPS.length - 1}
                                     className={`w-14 h-14 rounded-full border flex items-center justify-center transition-all ${activeIndex === ROUTE_STOPS.length - 1 ? 'border-black/5 opacity-30 cursor-not-allowed text-[#111111]/40' : 'border-black/10 hover:border-[#8B5A2B] hover:bg-[#8B5A2B]/5 text-[#111111] hover:text-[#8B5A2B] cursor-pointer'}`}
-                                    aria-label="Siguiente parada"
+                                    aria-label={t('home.routeSiguienteParada')}
                                 >
                                     <ChevronRight size={24} />
                                 </button>
@@ -282,10 +300,10 @@ export default function RouteExperienceSection() {
             <div className="relative mt-8 py-10 border-t border-black/5">
                 <div className="text-center flex flex-col sm:flex-row justify-center gap-4 px-6 z-10 w-full max-w-xl mx-auto">
                     <Link href="/packages" className="inline-flex flex-1 items-center justify-center gap-2 bg-[#C6A46A] hover:bg-[#8B5A2B] text-white text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-colors border-none shadow-sm hover:shadow-md">
-                        Explorar Paquetes de la Ruta
+                        {t('home.routeExplorarPaquetes')}
                     </Link>
                     <Link href="/tailor-made-trip" className="inline-flex flex-1 items-center justify-center gap-2 bg-transparent border border-[#111111]/20 hover:bg-[#111111]/5 text-[#111111] text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-colors">
-                        Diseñar Viaje a Medida
+                        {t('home.routeDisenarViajeMedida')}
                     </Link>
                 </div>
             </div>

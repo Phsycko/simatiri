@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getWhatsAppUrl } from '@/lib/site-config'
+import { getWhatsAppUrl, DISPLAY_PHONE } from '@/lib/site-config'
+import { useTranslation } from '@/contexts/LocaleContext'
 
 const SITE_NAME = 'Simatiri Experience'
-const SHARE_TEXT = 'Te comparto esta página de Simatiri Experience.'
 const SCROLL_THRESHOLD = 180
 
 const spring = { type: 'spring' as const, stiffness: 400, damping: 36 }
@@ -19,6 +19,7 @@ export function WhatsAppFloatingButton() {
   const [mounted, setMounted] = useState(false)
   const [toast, setToast] = useState<'shared' | 'copied' | null>(null)
   const [compact, setCompact] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setMounted(true)
@@ -49,7 +50,7 @@ export function WhatsAppFloatingButton() {
       if (typeof navigator !== 'undefined' && navigator.share) {
         await navigator.share({
           title,
-          text: SHARE_TEXT,
+          text: title,
           url,
         })
         setToast('shared')
@@ -67,8 +68,8 @@ export function WhatsAppFloatingButton() {
       }
     }
 
-    const t = setTimeout(() => setToast(null), 2600)
-    return () => clearTimeout(t)
+    const timeout = setTimeout(() => setToast(null), 2600)
+    return () => clearTimeout(timeout)
   }, [])
 
   if (!mounted) return null
@@ -89,7 +90,7 @@ export function WhatsAppFloatingButton() {
         <motion.button
           type="button"
           onClick={handleShare}
-          aria-label="Compartir esta página"
+          aria-label={t('whatsapp.compartirPagina')}
           animate={{
             paddingLeft: compact ? 14 : 20,
             paddingRight: compact ? 14 : 20,
@@ -116,7 +117,7 @@ export function WhatsAppFloatingButton() {
               strokeWidth={compact ? 1.5 : 1.4}
             />
           </span>
-          <span className="overflow-hidden whitespace-nowrap flex items-center min-w-0">
+            <span className="overflow-hidden whitespace-nowrap flex items-center min-w-0">
             <motion.span
               animate={{
                 opacity: compact ? 0 : 1,
@@ -125,17 +126,18 @@ export function WhatsAppFloatingButton() {
               transition={springSlow}
               className="block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#1C1812]"
             >
-              Compartir
+              {t('whatsapp.compartir')}
             </motion.span>
           </span>
         </motion.button>
 
-        {/* Principal: Hablar con un asesor — expandido con texto, compacto como pastilla centrada */}
+        {/* Principal: Hablar con un asesor */}
         <motion.a
           href={getWhatsAppUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Hablar con un asesor por WhatsApp"
+          aria-label={`${t('whatsapp.hablarAsesor')} · ${DISPLAY_PHONE}`}
+          title={`${t('whatsapp.hablarAsesor')} · ${DISPLAY_PHONE}`}
           animate={{
             paddingLeft: compact ? 14 : 28,
             paddingRight: compact ? 14 : 28,
@@ -159,16 +161,26 @@ export function WhatsAppFloatingButton() {
           <span className="shrink-0 flex items-center justify-center text-white">
             <WhatsAppIcon className={compact ? 'h-5 w-5' : 'h-5 w-5 md:h-6 md:w-6'} />
           </span>
-          <span className="overflow-hidden whitespace-nowrap flex items-center min-w-0">
+          <span className="overflow-hidden min-w-0 flex flex-col items-start">
             <motion.span
               animate={{
                 opacity: compact ? 0 : 1,
                 maxWidth: compact ? 0 : 260,
               }}
               transition={springSlow}
-              className="block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-white"
+              className="block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-white whitespace-nowrap truncate"
             >
-              Hablar con un asesor
+              {t('whatsapp.hablarAsesor')}
+            </motion.span>
+            <motion.span
+              animate={{
+                opacity: compact ? 0 : 1,
+                maxWidth: compact ? 0 : 160,
+              }}
+              transition={springSlow}
+              className="block text-[10px] sm:text-[11px] font-medium normal-case tracking-wide text-white/85 mt-0.5 whitespace-nowrap truncate"
+            >
+              {DISPLAY_PHONE}
             </motion.span>
           </span>
         </motion.a>
@@ -187,7 +199,7 @@ export function WhatsAppFloatingButton() {
             <div className="rounded-full border border-[#2e4a3d]/25 bg-[#1C1812]/95 backdrop-blur-md px-5 py-3 shadow-[0_8px_32px_rgba(28,24,18,0.3)]">
               <span className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#FAF5EF]">
                 <CheckIcon className="h-4 w-4 text-[#B7925A] shrink-0" />
-                {toast === 'copied' ? 'Enlace copiado' : 'Listo para compartir'}
+                {toast === 'copied' ? t('whatsapp.enlaceCopiado') : t('whatsapp.listoCompartir')}
               </span>
             </div>
           </motion.div>

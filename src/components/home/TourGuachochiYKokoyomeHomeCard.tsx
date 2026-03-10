@@ -29,7 +29,7 @@ export function TourGuachochiYKokoyomeHomeCard({ tour }: { tour: any }) {
                     <div className="flex justify-between items-center border-t border-gray-100 pt-4">
                         <span className="text-xs text-gray-400">Por persona</span>
                         <span className="font-bold text-[#7B4B2A]">
-                            Desde $1,800.00 MXN
+                            Desde ${(tour.tierPrices?.[0]?.pricePerPerson ?? 2200).toLocaleString()} MXN
                         </span>
                     </div>
                 </div>

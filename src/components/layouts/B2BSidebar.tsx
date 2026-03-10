@@ -2,7 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Compass, Users, CreditCard, Settings } from 'lucide-react'
+import { LayoutDashboard, Compass, Users, CreditCard, Calendar, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function B2BSidebar() {
@@ -11,6 +11,7 @@ export function B2BSidebar() {
     const links = [
         { name: 'Dashboard', href: '/portal', icon: LayoutDashboard },
         { name: 'Cotizador', href: '/portal/quotes', icon: Compass },
+        { name: 'Disponibilidad', href: '/portal/availability', icon: Calendar },
         { name: 'CRM (Clientes)', href: '/portal/crm', icon: Users },
         { name: 'Pagos & Anticipos', href: '/portal/payments', icon: CreditCard },
         { name: 'Configuración', href: '/portal/settings', icon: Settings },

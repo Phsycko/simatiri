@@ -4,15 +4,18 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, MapPin, X, Check, Camera, Compass, Info } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image';
+import Image from 'next/image'
+import { useTranslation } from '@/contexts/LocaleContext'
 
 interface TourGuachochiYKokoyomeModalProps {
     isOpen: boolean
     setIsOpen: (open: boolean) => void
     tour: any
+    onRequestQuote?: () => void
 }
 
-export function TourGuachochiYKokoyomeModal({ isOpen, setIsOpen, tour }: TourGuachochiYKokoyomeModalProps) {
+export function TourGuachochiYKokoyomeModal({ isOpen, setIsOpen, tour, onRequestQuote }: TourGuachochiYKokoyomeModalProps) {
+    const { t } = useTranslation()
     const [imgSrc, setImgSrc] = useState('/images/destinations/guachochi.jpg')
 
     // Bloquear scroll del body cuando el modal está abierto
@@ -103,7 +106,7 @@ export function TourGuachochiYKokoyomeModal({ isOpen, setIsOpen, tour }: TourGua
                                         </div>
 
                                         <div className="mb-10">
-                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">Itinerario / lugares a visitar</h3>
+                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">{t('generic.itinerarioLugares')}</h3>
                                             <ul className="space-y-4">
                                                 {[
                                                     "Cañón de Basihuare",
@@ -125,21 +128,30 @@ export function TourGuachochiYKokoyomeModal({ isOpen, setIsOpen, tour }: TourGua
                                         </div>
 
                                         <div className="mb-8">
-                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">Tarifas por persona</h3>
+                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">{t('generic.tarifasPorPersona')}</h3>
                                             <div className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
-                                                {[
-                                                    { min: 1, max: 2, price: 1800 },
-                                                    { min: 3, max: 6, price: 1400 },
-                                                    { min: 7, max: 11, price: 1200 },
-                                                    { min: 12, max: 14, price: 1000 },
-                                                    { min: 15, max: 38, price: 800 },
-                                                    { min: 39, max: "en adelante", price: 700 },
-                                                ].map((t, i) => (
-                                                    <div key={i} className={`flex items-center justify-between p-4 ${i !== 5 ? 'border-b border-gray-100' : ''}`}>
-                                                        <span className="text-gray-600 font-medium">{t.min} – {t.max} pax</span>
-                                                        <span className="text-[#0a192f] font-semibold text-lg">${t.price.toLocaleString('en-US', { minimumFractionDigits: 2 })} <span className="text-sm text-gray-400 font-normal">MXN</span></span>
-                                                    </div>
-                                                ))}
+                                                {tour?.tierPrices?.length ? (
+                                                    tour.tierPrices.map((tier: any, i: number) => (
+                                                        <div key={tier.id} className={`flex items-center justify-between p-4 ${i !== tour.tierPrices.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                                                            <span className="text-gray-600 font-medium">{tier.minPax}{tier.maxPax < 100 ? ` – ${tier.maxPax}` : '+'} {t('common.pax')}</span>
+                                                            <span className="text-[#0a192f] font-semibold text-lg">${(tier.pricePerPerson + 200).toLocaleString()} <span className="text-sm text-gray-400 font-normal">{t('common.mxn')}</span></span>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    [
+                                                        { min: 1, max: 2, price: 2400 },
+                                                        { min: 3, max: 6, price: 2000 },
+                                                        { min: 7, max: 11, price: 1800 },
+                                                        { min: 12, max: 14, price: 1400 },
+                                                        { min: 15, max: 38, price: 1400 },
+                                                        { min: 39, max: "en adelante", price: 1300 },
+                                                    ].map((fb, i) => (
+                                                        <div key={i} className={`flex items-center justify-between p-4 ${i !== 5 ? 'border-b border-gray-100' : ''}`}>
+                                                            <span className="text-gray-600 font-medium">{fb.min} – {fb.max} {t('common.pax')}</span>
+                                                            <span className="text-[#0a192f] font-semibold text-lg">${fb.price.toLocaleString('en-US', { minimumFractionDigits: 2 })} <span className="text-sm text-gray-400 font-normal">{t('common.mxn')}</span></span>
+                                                        </div>
+                                                    ))
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -150,7 +162,7 @@ export function TourGuachochiYKokoyomeModal({ isOpen, setIsOpen, tour }: TourGua
                                             {/* Decorative */}
                                             <div className="absolute top-0 right-0 w-32 h-32 bg-[#2e4a3d]/5 rounded-bl-[100px] pointer-events-none" />
 
-                                            <h4 className="font-serif text-xl text-[#0a192f] mb-6">Qué incluye</h4>
+                                            <h4 className="font-serif text-xl text-[#0a192f] mb-6">{t('generic.queIncluye')}</h4>
                                             <ul className="space-y-4 mb-8">
                                                 {[
                                                     "Traslado desde el punto de partida a todos los puntos de interés",
@@ -166,7 +178,7 @@ export function TourGuachochiYKokoyomeModal({ isOpen, setIsOpen, tour }: TourGua
                                                 ))}
                                             </ul>
 
-                                            <h4 className="font-serif text-xl text-[#0a192f] border-t border-gray-200 pt-6 mb-6">Especificaciones</h4>
+                                            <h4 className="font-serif text-xl text-[#0a192f] border-t border-gray-200 pt-6 mb-6">{t('generic.especificaciones')}</h4>
                                             <ul className="space-y-4 mb-8">
                                                 {[
                                                     "El Tour Guachochi y Kokoyome no incluye entradas a los lugares de interés",
@@ -182,18 +194,19 @@ export function TourGuachochiYKokoyomeModal({ isOpen, setIsOpen, tour }: TourGua
                                                 ))}
                                             </ul>
 
-                                            <Link
-                                                href="/tailor-made-trip"
+                                            <button
+                                                type="button"
+                                                onClick={() => onRequestQuote?.()}
                                                 className="flex items-center justify-center gap-2 w-full bg-[#7B4B2A] hover:bg-[#6A3F23] text-white py-4 rounded-xl text-sm font-semibold tracking-wider transition-colors shadow-lg shadow-[#7B4B2A]/20"
                                             >
-                                                COTIZAR TOUR
-                                            </Link>
+                                                {t('generic.cotizarTourCaps')}
+                                            </button>
                                         </div>
 
                                         <div className="text-center">
-                                            <p className="text-xs text-gray-400">¿Dudas sobre esta experiencia?</p>
+                                            <p className="text-xs text-gray-400">{t('generic.dudasExperiencia')}</p>
                                             <Link href="/contact" className="text-sm text-[#7B4B2A] font-semibold hover:underline mt-1 inline-block">
-                                                Contactar a un asesor
+                                                {t('generic.contactarAsesorLink')}
                                             </Link>
                                         </div>
                                     </div>

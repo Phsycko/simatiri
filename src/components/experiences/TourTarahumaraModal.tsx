@@ -4,15 +4,18 @@ import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, MapPin, X, Check, Camera, Compass } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image';
+import Image from 'next/image'
+import { useTranslation } from '@/contexts/LocaleContext'
 
 interface TourTarahumaraModalProps {
     isOpen: boolean
     setIsOpen: (open: boolean) => void
     tour: any
+    onRequestQuote?: () => void
 }
 
-export function TourTarahumaraModal({ isOpen, setIsOpen, tour }: TourTarahumaraModalProps) {
+export function TourTarahumaraModal({ isOpen, setIsOpen, tour, onRequestQuote }: TourTarahumaraModalProps) {
+    const { t } = useTranslation()
     // Bloquear scroll del body cuando el modal está abierto
     useEffect(() => {
         if (isOpen) {
@@ -85,30 +88,32 @@ export function TourTarahumaraModal({ isOpen, setIsOpen, tour }: TourTarahumaraM
                                     <div className="flex-1">
                                         <div className="flex items-center gap-5 text-sm text-gray-500 font-medium mb-8 pb-8 border-b border-gray-100">
                                             <div className="flex items-center gap-2">
-                                                <Clock size={16} className="text-[#7B4B2A]" /> {tour.durationHours} horas
+                                                <Clock size={16} className="text-[#7B4B2A]" /> {tour.durationHours} {t('common.horas')}
                                             </div>
                                             <div className="w-px h-4 bg-gray-200" />
                                             <div className="flex items-center gap-2">
-                                                <Compass size={16} className="text-[#7B4B2A]" /> Cultura y Naturaleza
+                                                <Compass size={16} className="text-[#7B4B2A]" /> {t('generic.culturaNaturaleza')}
                                             </div>
                                         </div>
 
                                         <div className="mb-10">
-                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">Sobre la experiencia</h3>
+                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">{t('generic.sobreExperiencia')}</h3>
                                             <p className="text-gray-600 leading-relaxed">
-                                                {tour.description || "Adéntrate en el corazón de la Sierra Tarahumara y descubre la cultura ancestral, paisajes impresionantes y formaciones caprichosas en un recorrido profundo y respetuoso que quedará grabado en tu memoria."}
+                                                {tour.description?.startsWith('Lugares: ')
+                                                    ? `${t('generic.lugaresLabel')}: ${tour.description.slice(9)}`
+                                                    : (tour.description || "Adéntrate en el corazón de la Sierra Tarahumara y descubre la cultura ancestral, paisajes impresionantes y formaciones caprichosas en un recorrido profundo y respetuoso que quedará grabado en tu memoria.")}
                                             </p>
                                         </div>
 
                                         <div className="mb-10">
-                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">Lugares a visitar</h3>
+                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">{t('generic.lugaresAVisitar')}</h3>
                                             <ul className="space-y-4">
                                                 {[
-                                                    "Cueva Tarahumara (contacto cultural)",
-                                                    "Piedra del Elefante (formaciones rocosas)",
-                                                    "Lago de Arareco",
-                                                    "Cascada de Cusárare",
-                                                    "Misión Jesuita de Cusárare"
+                                                    t('generic.placeCuevaTarahumara'),
+                                                    t('generic.placePiedraElefante'),
+                                                    t('generic.placeLagoArareco'),
+                                                    t('generic.placeCascadaCusarare'),
+                                                    t('generic.placeMisionCusarare'),
                                                 ].map((lugar, i) => (
                                                     <li key={i} className="flex items-start gap-3 text-gray-600">
                                                         <div className="mt-1 min-w-5">
@@ -121,12 +126,12 @@ export function TourTarahumaraModal({ isOpen, setIsOpen, tour }: TourTarahumaraM
                                         </div>
 
                                         <div className="mb-8">
-                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">Tarifas por persona</h3>
+                                            <h3 className="font-serif text-2xl text-[#0a192f] mb-4">{t('generic.tarifasPorPersona')}</h3>
                                             <div className="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
-                                                {tour.tierPrices?.map((t: any, i: number) => (
-                                                    <div key={t.id} className={`flex items-center justify-between p-4 ${i !== tour.tierPrices.length - 1 ? 'border-b border-gray-100' : ''}`}>
-                                                        <span className="text-gray-600 font-medium">{t.minPax}{t.maxPax < 100 ? ` – ${t.maxPax}` : '+'} pax</span>
-                                                        <span className="text-[#0a192f] font-semibold text-lg">${t.pricePerPerson.toLocaleString()} <span className="text-sm text-gray-400 font-normal">MXN</span></span>
+                                                {tour.tierPrices?.map((tier: any, i: number) => (
+                                                    <div key={tier.id} className={`flex items-center justify-between p-4 ${i !== tour.tierPrices.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                                                        <span className="text-gray-600 font-medium">{tier.minPax}{tier.maxPax < 100 ? ` – ${tier.maxPax}` : '+'} {t('common.pax')}</span>
+                                                        <span className="text-[#0a192f] font-semibold text-lg">${(tier.pricePerPerson + 200).toLocaleString()} <span className="text-sm text-gray-400 font-normal">{t('common.mxn')}</span></span>
                                                     </div>
                                                 ))}
                                             </div>
@@ -139,14 +144,14 @@ export function TourTarahumaraModal({ isOpen, setIsOpen, tour }: TourTarahumaraM
                                             {/* Decorative */}
                                             <div className="absolute top-0 right-0 w-32 h-32 bg-[#2e4a3d]/5 rounded-bl-[100px] pointer-events-none" />
 
-                                            <h4 className="font-serif text-xl text-[#0a192f] mb-6">Qué incluye</h4>
+                                            <h4 className="font-serif text-xl text-[#0a192f] mb-6">{t('generic.queIncluye')}</h4>
                                             <ul className="space-y-4 mb-8">
                                                 {[
-                                                    "Transporte desde Creel",
-                                                    "Guía local certificado",
-                                                    "Accesos a comunidades",
-                                                    "Entradas a parques",
-                                                    "Hidratación a bordo"
+                                                    t('generic.transporteDesdeCreel'),
+                                                    t('generic.guiaLocalCertificado'),
+                                                    t('generic.accesosComunidades'),
+                                                    t('generic.entradasParques'),
+                                                    t('generic.hidratacionBordo'),
                                                 ].map((item, i) => (
                                                     <li key={i} className="flex items-center gap-3 text-sm text-gray-600">
                                                         <div className="bg-[#7B4B2A]/10 p-1 rounded-full text-[#7B4B2A]">
@@ -157,18 +162,19 @@ export function TourTarahumaraModal({ isOpen, setIsOpen, tour }: TourTarahumaraM
                                                 ))}
                                             </ul>
 
-                                            <Link
-                                                href="/tailor-made-trip"
+                                            <button
+                                                type="button"
+                                                onClick={() => onRequestQuote?.()}
                                                 className="flex items-center justify-center gap-2 w-full bg-[#7B4B2A] hover:bg-[#6A3F23] text-white py-4 rounded-xl text-sm font-semibold tracking-wider transition-colors shadow-lg shadow-[#7B4B2A]/20"
                                             >
-                                                COTIZAR TOUR
-                                            </Link>
+                                                {t('generic.cotizarTourCaps')}
+                                            </button>
                                         </div>
 
                                         <div className="text-center">
-                                            <p className="text-xs text-gray-400">¿Dudas sobre esta experiencia?</p>
+                                            <p className="text-xs text-gray-400">{t('generic.dudasExperiencia')}</p>
                                             <Link href="/contact" className="text-sm text-[#7B4B2A] font-semibold hover:underline mt-1 inline-block">
-                                                Contactar a un asesor
+                                                {t('generic.contactarAsesorLink')}
                                             </Link>
                                         </div>
                                     </div>

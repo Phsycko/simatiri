@@ -1,6 +1,9 @@
 'use client'
 
+import { useTranslation } from '@/contexts/LocaleContext'
+
 export function HotelsHeroNew() {
+  const { t } = useTranslation()
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center px-6 sm:px-10 py-24 overflow-hidden">
       {/* Fondo: bloque oscuro con textura sutil */}
@@ -11,18 +14,18 @@ export function HotelsHeroNew() {
         <div className="inline-flex items-center gap-3 mb-8 px-4 py-2 rounded-full border border-[#2e4a3d]/60 bg-[#2e4a3d]/10">
           <span className="w-2 h-2 rounded-full bg-[#7B6B4A]" />
           <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-[#c4a574]">
-            Documento comercial
+            {t('hotels.documentoComercialCaps')}
           </span>
         </div>
 
         <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#FAF5EF] tracking-tight leading-[1.08] mb-8">
-          Convenio hotelero preferencial
+          {t('hotels.convenioPreferencial')}
           <br />
-          <span className="text-[#c4a574] font-light italic">para tour operadoras</span>
+          <span className="text-[#c4a574] font-light italic">{t('hotels.paraTourOperadoras')}</span>
         </h1>
 
         <p className="text-[#FAF5EF]/75 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed">
-          Tarifas corporativas, beneficios exclusivos y atención personalizada para agencias y operadoras frecuentes.
+          {t('hotels.convenioDesc')}
         </p>
 
         <div className="mt-16 flex justify-center gap-8">

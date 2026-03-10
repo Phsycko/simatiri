@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import { cookies } from 'next/headers'
 import { ArrowRight, Train, Star, MapPin, Users } from 'lucide-react'
 import { prisma } from '@/lib/db/prisma'
 import RouteExperienceSection from '@/components/home/RouteExperienceSection'
@@ -14,6 +15,7 @@ import { TourGuachochiYKokoyomeHomeCard } from '@/components/home/TourGuachochiY
 import { TourCerocahuiHomeCard } from '@/components/home/TourCerocahuiHomeCard'
 import { TourMaguarichiHomeCard } from '@/components/home/TourMaguarichiHomeCard'
 import { buildShareMeta } from '@/lib/metadata'
+import { LOCALE_COOKIE, getLocaleFromCookie, getT } from '@/lib/i18n'
 
 const title = 'SIMATIRI EXPERIENCE | Operadora Turística en las Barrancas del Cobre'
 const description = 'Operadora turística certificada en Creel y la Sierra Tarahumara. Paquetes CHEPE, tours y hoteles en el norte de México.'
@@ -24,14 +26,18 @@ export const metadata: Metadata = {
   ...buildShareMeta({ title, description, pathname: '/' }),
 }
 
-const highlights = [
-  { icon: Train, label: 'Tren CHEPE', sub: 'Express y Regional' },
-  { icon: MapPin, label: '10 Destinos', sub: 'Sierra Tarahumara' },
-  { icon: Star, label: 'Certificados', sub: 'RNT: 0108009be33c3' },
-  { icon: Users, label: 'Agencias B2B', sub: 'Tarifas Preferenciales' },
-]
-
 export default async function HomePage() {
+  const cookieStore = await cookies()
+  const locale = getLocaleFromCookie(cookieStore.get(LOCALE_COOKIE)?.value)
+  const t = getT(locale)
+
+  const highlights = [
+    { icon: Train, label: t('home.highlightTrain'), sub: t('home.highlightTrainSub') },
+    { icon: MapPin, label: t('home.highlightDestinos'), sub: t('home.highlightDestinosSub') },
+    { icon: Star, label: t('home.highlightCertificados'), sub: t('home.highlightCertificadosSub') },
+    { icon: Users, label: t('home.highlightAgencias'), sub: t('home.highlightAgenciasSub') },
+  ]
+
   const packages = await prisma.package.findMany({
     include: { prices: { where: { occupancyType: 'DOBLE', isUpgrade: false } } },
     orderBy: { id: 'asc' },
@@ -51,12 +57,12 @@ export default async function HomePage() {
         className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#071422]"
       >
         <Image
-          src="/images/hero-background-drive.png"
+          src="/home-gallery/MAR02997.jpg"
           alt="Sierra Tarahumara"
           fill
           priority
           sizes="100vw"
-          className="object-cover z-0"
+          className="object-cover object-center z-0"
         />
         <div className="absolute inset-0 bg-black/55 pointer-events-none z-10" />
         {/* Dot grid texture */}
@@ -82,17 +88,16 @@ export default async function HomePage() {
         <div className="relative z-20 flex flex-col items-center text-center px-6 max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-white/70 text-xs uppercase tracking-widest font-medium mb-10">
             <span className="w-1.5 h-1.5 rounded-full bg-[#7B4B2A]" />
-            Operadora Turística Certificada · Creel, Chihuahua
+            {t('home.heroBadge')}
           </div>
 
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.05] tracking-tight">
-            La Sierra Tarahumara,<br />
-            <span className="italic text-white/80">a tu alcance.</span>
+            {t('home.heroTitle')}<br />
+            <span className="italic text-white/80">{t('home.heroTitleItalic')}</span>
           </h1>
 
           <p className="text-white/60 text-lg md:text-xl font-light max-w-2xl mb-12 leading-relaxed">
-            Especialistas en el Tren CHEPE, Barrancas del Cobre y la cultura Rarámuri.
-            Diseñamos cada viaje con precisión, carácter y autenticidad.
+            {t('home.heroSubtitle')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
@@ -100,13 +105,13 @@ export default async function HomePage() {
               href="/packages"
               className="inline-flex items-center gap-2 bg-[#7B4B2A] hover:bg-[#8B5A36] active:bg-[#6A3F23] text-[#FFFFFF] text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-[250ms] ease-in-out shadow-none border-none"
             >
-              Ver Paquetes <ArrowRight size={16} />
+              {t('home.ctaVerPaquetes')} <ArrowRight size={16} />
             </Link>
             <Link
               href="/tailor-made-trip"
               className="inline-flex items-center gap-2 bg-white/10 border border-white/25 hover:bg-white/20 text-white text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 backdrop-blur-sm"
             >
-              Cotizar Viaje
+              {t('home.ctaCotizarViaje')}
             </Link>
           </div>
         </div>
@@ -134,16 +139,21 @@ export default async function HomePage() {
       <section className="py-28 px-8 max-w-7xl mx-auto w-full">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16">
           <div>
-            <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-3">Paquetes Estelares</div>
-            <h2 className="font-serif text-4xl text-[#0a192f]">Rutas completas en el CHEPE</h2>
+            <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-3">{t('home.paquetesEstelares')}</div>
+            <h2 className="font-serif text-4xl text-[#0a192f]">{t('home.rutasCompletasCHEPE')}</h2>
           </div>
           <Link href="/packages" className="mt-6 md:mt-0 text-sm font-medium text-[#0a192f] border-b border-[#0a192f] pb-0.5 hover:text-[#7B4B2A] hover:border-[#7B4B2A] transition-colors flex items-center gap-2">
-            Ver todos los paquetes <ArrowRight size={14} />
+            {t('home.verTodosPaquetes')} <ArrowRight size={14} />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {packages.map((pkg: any) => (
+          {packages.map((pkg: any) => {
+            const trainClassRaw = (pkg.trainClass || '').toUpperCase()
+            const isExpressPrimera = trainClassRaw.includes('EXPRESS') && trainClassRaw.includes('PRIMERA')
+            const displayTrainClass = isExpressPrimera ? t('packages.trainClassExpressPrimera') : t('packages.trainClassRegional')
+            const displayTitle = t(`packages.paquete${pkg.id}`) !== `packages.paquete${pkg.id}` ? t(`packages.paquete${pkg.id}`) : pkg.title
+            return (
             <Link
               href={(() => {
                 const hrefMap: Record<number, string> = {
@@ -185,18 +195,19 @@ export default async function HomePage() {
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity group-hover:opacity-90" />
                 <div className="absolute bottom-5 left-5 right-5">
-                  <span className="text-[10px] text-[#7B4B2A] uppercase tracking-widest font-semibold">{pkg.trainClass}</span>
-                  <h3 className="font-serif text-white text-xl mt-1">{pkg.title}</h3>
+                  <span className="text-[10px] text-[#7B4B2A] uppercase tracking-widest font-semibold">{displayTrainClass}</span>
+                  <h3 className="font-serif text-white text-xl mt-1">{displayTitle}</h3>
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">{pkg.durationDays} Días</span>
+                <span className="text-sm text-gray-500">{pkg.durationDays} {t('common.dias')}</span>
                 <span className="font-semibold text-[#0a192f]">
-                  Desde ${pkg.prices[0]?.pricePerPerson?.toLocaleString()} MXN
+                  {t('home.desdeMxn')} ${pkg.prices[0]?.pricePerPerson?.toLocaleString()} {t('common.mxn')}
                 </span>
               </div>
             </Link>
-          ))}
+          );
+          })}
         </div>
       </section>
 
@@ -205,11 +216,11 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16">
             <div>
-              <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-3">Experiencias</div>
-              <h2 className="font-serif text-4xl text-[#0a192f]">Tours y Vivencias Únicas</h2>
+              <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-3">{t('home.experienciasTitle')}</div>
+              <h2 className="font-serif text-4xl text-[#0a192f]">{t('home.toursVivencias')}</h2>
             </div>
             <Link href="/experiences" className="mt-6 md:mt-0 text-sm font-medium text-[#0a192f] border-b border-[#0a192f] pb-0.5 hover:text-[#7B4B2A] hover:border-[#7B4B2A] transition-colors flex items-center gap-2">
-              Ver todas las experiencias <ArrowRight size={14} />
+              {t('home.verTodasExperiencias')} <ArrowRight size={14} />
             </Link>
           </div>
 
@@ -249,11 +260,11 @@ export default async function HomePage() {
                   </div>
                   <div className="p-6">
                     <h3 className="font-serif text-xl text-[#0a192f] mb-2 group-hover:text-[#2e4a3d] transition-colors">{tour.title}</h3>
-                    <p className="text-sm text-gray-500 mb-4">{tour.durationHours} Horas de experiencia</p>
+                    <p className="text-sm text-gray-500 mb-4">{tour.durationHours} {t('home.horasExperiencia')}</p>
                     <div className="flex justify-between items-center border-t border-gray-100 pt-4">
-                      <span className="text-xs text-gray-400">Por persona</span>
+                      <span className="text-xs text-gray-400">{t('common.porPersona')}</span>
                       <span className="font-bold text-[#7B4B2A]">
-                        Desde ${tour.tierPrices[0]?.pricePerPerson?.toLocaleString()} MXN
+                        Desde ${tour.tierPrices[0]?.pricePerPerson?.toLocaleString()} {t('common.mxn')}
                       </span>
                     </div>
                   </div>
@@ -265,25 +276,24 @@ export default async function HomePage() {
       </section>
 
       {/* GALERÍA */}
-      <HomeGallerySection />
+      <HomeGallerySection t={t} />
 
       {/* CTA AGENCIAS */}
       <section className="py-28 px-8">
         <div className="max-w-5xl mx-auto bg-[#261510] rounded-3xl p-12 md:p-20 text-white text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#7B4B2A]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
           <div className="relative z-10">
-            <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-4">Para Agencias de Viaje</div>
-            <h2 className="font-serif text-4xl md:text-5xl mb-6">Convenio corporativo<br />con beneficios reales.</h2>
+            <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-4">{t('home.paraAgencias')}</div>
+            <h2 className="font-serif text-4xl md:text-5xl mb-6">{t('home.convenioCorporativo')}</h2>
             <p className="text-white/60 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-              Tarifas preferenciales, early check-in, desayuno incluido y facturación personalizada.
-              Vigente hasta febrero 2027.
+              {t('home.convenioDesc')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/about" className="inline-flex items-center gap-2 bg-[#7B4B2A] hover:bg-[#8B5A36] active:bg-[#6A3F23] text-[#FFFFFF] text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-[250ms] ease-in-out shadow-none border-none">
-                Conocer el Convenio <ArrowRight size={16} />
+                {t('home.conocerConvenio')} <ArrowRight size={16} />
               </Link>
               <Link href="/contact" className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-all">
-                Contactar
+                {t('home.contactar')}
               </Link>
             </div>
           </div>

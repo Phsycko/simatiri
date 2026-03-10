@@ -6,6 +6,8 @@ import { Train, Calendar } from 'lucide-react'
 import { getRelatedPackageIds, getDestinationNameForSlug, normalizeSlug } from '@/lib/destination-related-packages'
 import type { Metadata } from 'next'
 import { buildShareMeta } from '@/lib/metadata'
+import { cookies } from 'next/headers'
+import { LOCALE_COOKIE, getLocaleFromCookie, getT } from '@/lib/i18n'
 
 // Ensure this page is always server-rendered per request
 export const dynamic = 'force-dynamic'
@@ -202,6 +204,10 @@ export default async function PackagesPage({
 }: {
     searchParams?: Promise<{ destino?: string; debug?: string }> | { destino?: string; debug?: string }
 }) {
+    const cookieStore = await cookies()
+    const locale = getLocaleFromCookie(cookieStore.get(LOCALE_COOKIE)?.value)
+    const t = getT(locale)
+
     const params =
         searchParams != null && typeof (searchParams as Promise<unknown>).then === 'function'
             ? await (searchParams as Promise<{ destino?: string; debug?: string }>)
@@ -264,8 +270,8 @@ export default async function PackagesPage({
     return (
         <>
             <PageHero
-                title="Circuitos completos por la Sierra"
-                subtitle="Desde 3 hasta 7 días. Todo incluido: tren, hospedaje, tours y traslados. Disponibles en CHEPE Express y Regional."
+                title={t('packages.heroTitle')}
+                subtitle={t('packages.heroSubtitleFull')}
                 size="md"
                 backgroundImage="/images/heroes/packages-hero.jpg"
                 overlay="linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.05) 100%)"
@@ -289,21 +295,21 @@ export default async function PackagesPage({
                 {destinationName && (
                     <div className="mb-12 text-center">
                         <p className="text-[10px] uppercase tracking-[0.3em] text-[#7B4B2A] font-semibold mb-2">
-                            Relacionados con tu destino
+                            {t('packages.relacionadosDestino')}
                         </p>
                         <h2 className="font-serif text-2xl md:text-3xl text-[#0a192f]">
-                            Paquetes para {destinationName}
+                            {t('packages.paquetesPara')} {destinationName}
                         </h2>
                         {relatedIds.length > 0 ? (
                             <Link
                                 href="/packages"
                                 className="inline-block mt-4 text-sm text-[#7B4B2A] font-medium hover:underline"
                             >
-                                Ver todos los paquetes
+                                {t('packages.verTodosPaquetes')}
                             </Link>
                         ) : (
                             <p className="mt-3 text-gray-500 text-sm max-w-xl mx-auto">
-                                Explora todos nuestros circuitos por la Sierra Tarahumara.
+                                {t('packages.exploraCircuitosSierra')}
                             </p>
                         )}
                     </div>
@@ -339,11 +345,15 @@ export default async function PackagesPage({
                                     {/* Train badge */}
                                     <div className="absolute top-5 left-5 flex items-center gap-2 bg-black/30 backdrop-blur-sm rounded-full px-3 py-1.5 z-10">
                                         <Train size={13} className="text-[#7B4B2A]" />
-                                        <span className="text-white text-xs font-medium">{pkg?.trainClass ?? 'CHEPE'}</span>
+                                        <span className="text-white text-xs font-medium">
+                                            {pkg?.trainClass === 'CHEPE Express' || pkg?.trainClass === 'CHEPE Express Primera Clase' ? t('packages.trainClassExpressPrimera') : pkg?.trainClass === 'CHEPE Regional' ? t('packages.trainClassRegional') : (pkg?.trainClass ?? 'CHEPE')}
+                                        </span>
                                     </div>
                                     {/* Title over image */}
                                     <div className="absolute bottom-5 left-5 right-5 z-10">
-                                        <h2 className="font-serif text-2xl text-white group-hover:text-[#e5d3b3] transition-colors">{pkg?.title ?? 'Paquete'}</h2>
+                                        <h2 className="font-serif text-2xl text-white group-hover:text-[#e5d3b3] transition-colors">
+                                            {pkg?.id != null && t(`packages.paquete${pkg.id}`) !== `packages.paquete${pkg.id}` ? t(`packages.paquete${pkg.id}`) : (pkg?.title ?? 'Paquete')}
+                                        </h2>
                                         <p className="text-white/60 text-sm mt-1 line-clamp-1">
                                             {pkg?.id != null ? (routeMap[pkg.id] ?? pkg?.description) : pkg?.description ?? ''}
                                         </p>
@@ -353,22 +363,25 @@ export default async function PackagesPage({
                                 <div className="p-6">
                                     <div className="flex items-center gap-2 text-sm text-gray-500 mb-5">
                                         <Calendar size={15} />
-                                        <span>{pkg?.durationDays != null ? `${pkg.durationDays} Días / ${Number(pkg.durationDays) - 1} Noches` : '—'}</span>
+                                        <span>{pkg?.durationDays != null ? `${pkg.durationDays} ${t('common.dias')} / ${Number(pkg.durationDays) - 1} ${t('common.noches')}` : '—'}</span>
                                     </div>
 
                                     <div className="grid grid-cols-3 gap-3 mb-5">
-                                        {(prices.filter((p: any) => !p?.isUpgrade) ?? []).map((p: any) => (
+                                        {(prices.filter((p: any) => !p?.isUpgrade) ?? []).map((p: any) => {
+                                            const occKey = p?.occupancyType === 'DOBLE' ? 'packages.doble' : p?.occupancyType === 'TRIPLE' ? 'packages.triple' : p?.occupancyType === 'CUADRUPLE' ? 'packages.cuadruple' : null
+                                            return (
                                             <div key={p.id} className="bg-gray-50 rounded-xl p-3 text-center">
-                                                <div className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">{p?.occupancyType ?? ''}</div>
+                                                <div className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-1">{occKey ? t(occKey) : (p?.occupancyType ?? '')}</div>
                                                 <div className="text-sm font-bold text-[#0a192f]">${Number(p?.pricePerPerson ?? 0).toLocaleString()}</div>
                                             </div>
-                                        ))}
+                                            )
+                                        })}
                                     </div>
 
                                     {upgradeDouble && (
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                                            <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">Upgrade Express</span>
-                                            <span className="text-sm font-semibold text-[#7B4B2A]">${Number(upgradeDouble?.pricePerPerson ?? 0).toLocaleString()} MXN</span>
+                                            <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">{t('packages.upgradeExpress')}</span>
+                                            <span className="text-sm font-semibold text-[#7B4B2A]">${Number(upgradeDouble?.pricePerPerson ?? 0).toLocaleString()} {t('common.mxn')}</span>
                                         </div>
                                     )}
                                 </div>
@@ -376,9 +389,9 @@ export default async function PackagesPage({
                         )
                     }) : (
                         <div className="col-span-full text-center py-16 px-4">
-                            <p className="font-serif text-xl text-[#0a192f] mb-2">No hay paquetes para mostrar</p>
-                            <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">Explora nuestros circuitos o ajusta el destino seleccionado.</p>
-                            <Link href="/packages" className="text-sm font-semibold text-[#7B4B2A] hover:underline">Ver todos los paquetes</Link>
+                            <p className="font-serif text-xl text-[#0a192f] mb-2">{t('packages.noHayPaquetes')}</p>
+                            <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">{t('packages.exploraCircuitos')}</p>
+                            <Link href="/packages" className="text-sm font-semibold text-[#7B4B2A] hover:underline">{t('packages.verTodosPaquetes')}</Link>
                         </div>
                     )}
                 </div>

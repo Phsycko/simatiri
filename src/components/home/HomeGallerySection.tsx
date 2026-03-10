@@ -1,7 +1,9 @@
 import { getHomeGalleryImages } from '@/lib/home-gallery'
 import { HomeGallery } from '@/components/home/HomeGallery'
 
-export async function HomeGallerySection() {
+type HomeGallerySectionProps = { t: (key: string) => string }
+
+export async function HomeGallerySection({ t }: HomeGallerySectionProps) {
   const images = getHomeGalleryImages()
   if (!images.length) return null
 
@@ -10,13 +12,13 @@ export async function HomeGallerySection() {
       <div className="max-w-6xl mx-auto w-full">
         <header className="mb-8 md:mb-10 text-center max-w-xl mx-auto">
           <p className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-2">
-            Galería
+            {t('home.galleryBadge')}
           </p>
           <h2 className="font-serif text-2xl md:text-3xl text-[#0a192f] mb-2">
-            La Sierra en imágenes
+            {t('home.galleryTitle')}
           </h2>
           <p className="text-gray-600 text-sm leading-relaxed">
-            Un vistazo a los paisajes y experiencias que nos definen.
+            {t('home.galleryDesc')}
           </p>
         </header>
         <HomeGallery images={images} previewMode />

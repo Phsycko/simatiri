@@ -147,7 +147,7 @@ async function main() {
         }
     }
 
-    // 3. TOURS INDIVIDUALES
+    // 3. TOURS INDIVIDUALES (precios base; la UI suma +200 en las cards de Experiencias)
     const toursData = [
         {
             title: 'Tour Tarahumara',
@@ -155,12 +155,12 @@ async function main() {
             destinationId: destinations['Creel Pueblo Mágico'],
             description: 'Lugares: Cueva Tarahumara, Piedra del Elefante, Lago de Arareco, Cascada de Cusárare, Misión de San Ignacio, Valle de las Ranas, Valle de los Hongos',
             tiers: [
-                { min: 1, max: 2, price: 800 },
-                { min: 3, max: 5, price: 695 },
-                { min: 6, max: 10, price: 595 },
-                { min: 11, max: 13, price: 495 },
-                { min: 14, max: 38, price: 445 },
-                { min: 39, max: 100, price: 395 },
+                { min: 1, max: 2, price: 1000 },
+                { min: 3, max: 5, price: 895 },
+                { min: 6, max: 10, price: 795 },
+                { min: 11, max: 13, price: 695 },
+                { min: 14, max: 38, price: 645 },
+                { min: 39, max: 100, price: 595 },
             ]
         },
         {
@@ -169,12 +169,12 @@ async function main() {
             destinationId: destinations['Barrancas del Cobre'],
             description: 'Lugares: Estación CHEPE, Mirador Piedra Volada, Puente colgante, Parque Aventura Barrancas, Piedra de la Fertilidad, Cueva Tarahumara, Mirador Río Oteros',
             tiers: [
-                { min: 1, max: 2, price: 800 },
-                { min: 3, max: 5, price: 695 },
-                { min: 6, max: 10, price: 595 },
-                { min: 11, max: 13, price: 495 },
-                { min: 14, max: 38, price: 445 },
-                { min: 39, max: 100, price: 395 },
+                { min: 1, max: 2, price: 1000 },
+                { min: 3, max: 5, price: 895 },
+                { min: 6, max: 10, price: 795 },
+                { min: 11, max: 13, price: 695 },
+                { min: 14, max: 38, price: 645 },
+                { min: 39, max: 100, price: 595 },
             ]
         },
         {
@@ -183,12 +183,12 @@ async function main() {
             destinationId: destinations['Basaseachi'],
             description: 'Lugares: Cascada Basaseachi, Mirador San Lorenzo, Cañón Candameña',
             tiers: [
-                { min: 1, max: 2, price: 1500 },
-                { min: 3, max: 5, price: 1300 },
-                { min: 6, max: 10, price: 1000 },
-                { min: 11, max: 13, price: 900 },
-                { min: 14, max: 38, price: 800 },
-                { min: 39, max: 100, price: 700 },
+                { min: 1, max: 2, price: 1700 },
+                { min: 3, max: 5, price: 1500 },
+                { min: 6, max: 10, price: 1200 },
+                { min: 11, max: 13, price: 1100 },
+                { min: 14, max: 38, price: 1000 },
+                { min: 39, max: 100, price: 900 },
             ]
         },
         {
@@ -196,35 +196,84 @@ async function main() {
             durationHours: 6,
             destinationId: destinations['Cuauhtémoc'],
             description: 'Lugares: Museo Menonita, Casa de la Galleta, Quesería Menonita, Colonia Menonita, Pizzería Menonita',
-            tiers: [{ min: 1, max: 100, price: 600 }] // Precio promedio dummy para los que no tienen tarifario especifico
+            tiers: [
+                { min: 1, max: 2, price: 1500 },
+                { min: 3, max: 6, price: 1300 },
+                { min: 7, max: 11, price: 1150 },
+                { min: 12, max: 14, price: 1050 },
+                { min: 15, max: 38, price: 950 },
+                { min: 39, max: 100, price: 850 },
+            ]
         },
         {
             title: 'Tour Recowata',
             durationHours: 10,
             destinationId: destinations['Creel Pueblo Mágico'],
             description: 'Lugares: Cañón Tararecua, Aguas termales Recowata',
-            tiers: [{ min: 1, max: 100, price: 900 }]
+            tiers: [
+                { min: 1, max: 2, price: 1000 },
+                { min: 3, max: 6, price: 900 },
+                { min: 7, max: 11, price: 800 },
+                { min: 12, max: 14, price: 750 },
+                { min: 15, max: 38, price: 700 },
+                { min: 39, max: 100, price: 650 },
+            ]
         },
         {
             title: 'Tour Guachochi y Kokoyome',
             durationHours: 12,
             destinationId: destinations['Guachochi'],
             description: 'Lugares: Cañón Basihuare, Cañón Humirá, Mirador La Capilla, Kokoyome, Barranca Sinforosa, Lago de las Garzas, Cascada El Salto',
-            tiers: [{ min: 1, max: 100, price: 1800 }]
+            tiers: [
+                { min: 1, max: 2, price: 2200 },
+                { min: 3, max: 6, price: 1800 },
+                { min: 7, max: 11, price: 1600 },
+                { min: 12, max: 14, price: 1200 },
+                { min: 15, max: 38, price: 1200 },
+                { min: 39, max: 100, price: 1100 },
+            ]
         },
         {
             title: 'Tour Cerocahui',
             durationHours: 10,
             destinationId: destinations['Cerocahui'],
             description: 'Lugares: Mirador del Gallego, Manantial Guadalupe, Misión de Cerocahui, Internado Rarámuri, Viñedo de Cerocahui',
-            tiers: [{ min: 1, max: 100, price: 1200 }]
+            tiers: [
+                { min: 1, max: 2, price: 1700 },
+                { min: 3, max: 6, price: 1500 },
+                { min: 7, max: 11, price: 1300 },
+                { min: 12, max: 14, price: 1200 },
+                { min: 15, max: 38, price: 1100 },
+                { min: 39, max: 100, price: 950 },
+            ]
         },
         {
             title: 'Tour Maguarichi',
             durationHours: 10,
-            destinationId: destinations['Divisadero'], // Assuming close
+            destinationId: destinations['Divisadero'],
             description: 'Incluye: Géisers, aromaterapia, fangoterapia, aguas termales',
-            tiers: [{ min: 1, max: 100, price: 1400 }]
+            tiers: [
+                { min: 1, max: 2, price: 1900 },
+                { min: 3, max: 6, price: 1700 },
+                { min: 7, max: 11, price: 1400 },
+                { min: 12, max: 14, price: 1200 },
+                { min: 15, max: 38, price: 1150 },
+                { min: 39, max: 100, price: 1050 },
+            ]
+        },
+        {
+            title: 'Hiking en Barrancas del Cobre',
+            durationHours: 8,
+            destinationId: destinations['Barrancas del Cobre'],
+            description: 'Vive la sierra a pie: senderos entre cañones, miradores de vértigo y silencio solo roto por el viento. Una experiencia inmersiva de naturaleza y esfuerzo que recompensa con algunas de las vistas más imponentes de México.',
+            tiers: [{ min: 1, max: 100, price: 5000 }]
+        },
+        {
+            title: 'Buceo en el Mar de Cortés',
+            durationHours: 6,
+            destinationId: destinations['Los Mochis'],
+            description: 'Explora el acuario del mundo: salida desde el puerto de Topolobampo hacia aguas del Mar de Cortés. Aventura submarina, vida marina en estado puro y una experiencia exclusiva para quienes buscan más que playa.',
+            tiers: [{ min: 1, max: 100, price: 5500 }]
         }
     ]
 

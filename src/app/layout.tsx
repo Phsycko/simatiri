@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layouts/Navbar'
 import { Footer } from '@/components/layouts/Footer'
 import { WhatsAppFloatingButton } from '@/components/ui/WhatsAppFloatingButton'
+import { LocaleProvider } from '@/contexts/LocaleContext'
+import { LOCALE_COOKIE, DEFAULT_LOCALE, type Locale } from '@/lib/i18n'
 import { getBaseUrl, buildShareMeta } from '@/lib/metadata'
 
 const inter = Inter({
@@ -51,20 +54,26 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const cookieStore = await cookies()
+  const localeCookie = cookieStore.get(LOCALE_COOKIE)?.value
+  const initialLocale: Locale = localeCookie === 'en' || localeCookie === 'es' ? localeCookie : DEFAULT_LOCALE
+
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang={initialLocale} className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col bg-white text-gray-900 selection:bg-[#e5d3b3] selection:text-[#0a192f]">
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
-        <WhatsAppFloatingButton />
+        <LocaleProvider initialLocale={initialLocale}>
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+          <WhatsAppFloatingButton />
+        </LocaleProvider>
       </body>
     </html>
   )

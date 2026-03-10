@@ -6,263 +6,12 @@ import { ArrowUpRight, MapPin, Compass, X, ChevronLeft, ChevronRight } from 'luc
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
-
-// Modal editorial data per destination (slug)
-type ModalData = {
-    subtitle: string
-    intro: string
-    whyGo: string[]
-    highlights: string[]
-    keyPlaces: string[]
-    bestSeason: { when: string; climate: string; expect: string }
-    travelerProfile: {
-        experienceType: string
-        travelerProfile: string
-        suggestedStay: string
-        culturalLevel: string
-        landscapeType: string
-        role: string
-    }
-    cta: { primary: string; secondary: string }
-}
-
-const destinationModalData: Record<string, ModalData> = {
-    'creel': {
-        subtitle: 'Campamento base del corazón de la Sierra',
-        intro: 'Creel late en el centro mismo de la Sierra Tarahumara: un pueblo de madera y piedra donde el tiempo se mide en rutas y en historias Rarámuri. Aquí no se pasa de largo; aquí se establece base para adentrarse en bosques de pinos infinitos, valles de hongos y ranas petrificadas, y en la presencia viva de una cultura que ha resistido siglos. Es el punto de partida perfecto para quien busca profundidad, no solo postales.',
-        whyGo: ['Puerta de entrada natural a la Sierra Tarahumara', 'Conexión auténtica con comunidades Rarámuri', 'Naturaleza monumental a minutos del pueblo', 'Logística estratégica para rutas hacia Divisadero y Barrancas', 'Experiencias icónicas: Valle de los Hongos, Arareco, misiones'],
-        highlights: ['Paisajes de bosque y valles rocosos', 'Cultura Rarámuri viva', 'Gastronomía local y artesanías', 'Aventura suave a intensa', 'Miradores y lagos', 'Base para tours al CHEPE y Barrancas'],
-        keyPlaces: ['Lago de Arareco', 'Valle de los Hongos', 'Valle de las Ranas', 'Cueva Tarahumara', 'Misión de San Ignacio', 'Conexión hacia Divisadero y Barrancas del Cobre'],
-        bestSeason: { when: 'Todo el año; otoño y primavera óptimos.', climate: 'Templado de montaña; noches frías en invierno.', expect: 'Verano lluvioso y verde; invierno seco y cielos claros.' },
-        travelerProfile: { experienceType: 'Naturaleza y cultura', travelerProfile: 'Viajero curioso, familias, parejas, aventureros moderados', suggestedStay: '2–4 noches como base', culturalLevel: 'Alta — encuentro directo con comunidades', landscapeType: 'Bosque de pino, valles rocosos, lagos', role: 'Base operativa principal' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Hablar con un asesor' }
-    },
-    'barrancas-del-cobre': {
-        subtitle: 'El epicentro indiscutible de la aventura en México',
-        intro: 'Las Barrancas del Cobre no son un solo lugar: son un sistema de cañones que multiplica la escala humana hasta volverla insignificante. Aquí la tierra se abre en abismos de más de mil metros, el tren serpentea por las laderas y la aventura — tirolesas, trekking, miradores — se vive con una intensidad que pocos destinos en el mundo pueden igualar. Es naturaleza pura, salvaje y monumental.',
-        whyGo: ['Uno de los sistemas de cañones más grandes del mundo', 'Experiencias de aventura de nivel internacional', 'Vistas que redefinen la idea de paisaje', 'Cruce del CHEPE y teleférico como experiencias únicas', 'Conexión con Divisadero, Creel y la Sierra'],
-        highlights: ['Cañones y abismos', 'Teleférico y tren', 'Aventura extrema y moderada', 'Fotografía y miradores', 'Naturaleza virgen', 'Tours organizados desde Creel y Divisadero'],
-        keyPlaces: ['Mirador del Parque de Aventura', 'Teleférico Barrancas', 'Trazado del Tren CHEPE', 'Sistema de cañones Urique–Tararecua', 'Puntos de tirolesa y rappel', 'Vistas hacia la Barranca del Cobre'],
-        bestSeason: { when: 'Otoño a primavera; evitar lluvias intensas de verano.', climate: 'Variable según altura; fresco en altos, cálido en fondo de barranca.', expect: 'Cielos despejados en temporada seca; verde intenso tras lluvias.' },
-        travelerProfile: { experienceType: 'Aventura y naturaleza extrema', travelerProfile: 'Aventureros, fotógrafos, parejas activas', suggestedStay: '1–3 noches según circuito', culturalLevel: 'Media — paisaje y experiencia física primero', landscapeType: 'Cañones, abismos, bosque', role: 'Destino estrella del circuito' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Explorar experiencias desde aquí' }
-    },
-    'divisadero': {
-        subtitle: 'El mirador icónico del Tren CHEPE y el vacío del teleférico',
-        intro: 'Divisadero es el instante en que el viaje se detiene ante el abismo: tres barrancas convergen a tus pies y el silencio solo lo rompe el viento. El teleférico cruza el vacío entre riscos; el tren hace su parada obligada. Aquí la experiencia es puramente visual y sensorial — una inmersión en la escala brutal de la Sierra, con infraestructura premium que no le resta autenticidad al lugar.',
-        whyGo: ['Vista de las Tres Barrancas en un solo punto', 'Teleférico más largo de Latinoamérica', 'Parada emblemática del Tren CHEPE', 'Fotografía y atardeceres inolvidables', 'Acceso directo a aventura y tranquilidad'],
-        highlights: ['Miradores panorámicos', 'Teleférico', 'Fotografía y paisaje', 'Cultura y artesanía local', 'Atardeceres', 'Conectividad con Creel y Barrancas'],
-        keyPlaces: ['Mirador de las Tres Barrancas', 'Estación del Tren CHEPE', 'Teleférico Barrancas', 'Pueblo de Divisadero', 'Vista a Urique y Tararecua', 'Senderos y puntos fotográficos'],
-        bestSeason: { when: 'Todo el año; otoño y primavera con mejor luz.', climate: 'Fresco en la altura; soleado la mayor parte del año.', expect: 'Niebla matutina posible; tardes despejadas ideales para fotografía.' },
-        travelerProfile: { experienceType: 'Panorámico y aventura suave', travelerProfile: 'Todos los perfiles; imprescindible para quien hace el CHEPE', suggestedStay: '1–2 noches', culturalLevel: 'Media — impacto visual y experiencia del tren', landscapeType: 'Cañones, miradores, vacío', role: 'Punto panorámico y conexión' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Cotizar viaje' }
-    },
-    'el-fuerte': {
-        subtitle: 'Umbral colonial antes del ascenso épico a la Sierra',
-        intro: 'El Fuerte es el prólogo perfecto al viaje: un Pueblo Mágico donde la arquitectura colonial y el rumor del Río Fuerte cuentan siglos de historia. Aquí se siente aún el paso de los conquistadores y el legado de las culturas originarias. Es el punto de partida occidental del Tren CHEPE para quien viene del mar; un lugar para respirar, caminar y preparar el espíritu antes de subir a la montaña.',
-        whyGo: ['Pueblo Mágico con arquitectura colonial intacta', 'Punto de partida del CHEPE desde la costa', 'Río Fuerte y naturaleza ribereña', 'Historia y leyendas (El Zorro)', 'Gastronomía y tranquilidad'],
-        highlights: ['Historia y arquitectura', 'Río y naturaleza', 'Gastronomía local', 'Danzas y tradiciones', 'Base para el CHEPE', 'Identidad colonial'],
-        keyPlaces: ['Centro histórico y Plaza de Armas', 'Río Fuerte y malecón', 'Museo y edificios coloniales', 'Comunidades cercanas', 'Estación del Tren CHEPE', 'Miradores y alrededores'],
-        bestSeason: { when: 'Invierno y primavera; evitar calor extremo de verano.', climate: 'Cálido; templado en invierno.', expect: 'Días soleados; noches agradables; ideal para caminata y fotografía.' },
-        travelerProfile: { experienceType: 'Historia y naturaleza suave', travelerProfile: 'Culturales, familias, quienes inician ruta CHEPE', suggestedStay: '1–2 noches', culturalLevel: 'Alta — historia y patrimonio', landscapeType: 'Colonial, río, vegetación', role: 'Base de inicio de ruta' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Hablar con un asesor' }
-    },
-    'los-mochis': {
-        subtitle: 'Donde el Mar de Cortés encuentra el inicio del tren más asombroso',
-        intro: 'Los Mochis es la puerta del Pacífico a la Sierra Tarahumara: una ciudad que vive del mar y del campo, con una gastronomía que atrae a viajeros de todo el país. Aquí empieza — o termina — el recorrido del CHEPE para quienes vienen de la costa. No es solo un punto logístico: es una oportunidad de mariscos frescos, ambiente portuario y la emoción de subir al tren rumbo a la montaña.',
-        whyGo: ['Inicio o fin del Tren CHEPE desde la costa', 'Gastronomía de mar y tierra de primer nivel', 'Conectividad aérea y terrestre', 'Puerto Topolobampo y Mar de Cortés', 'Logística ideal para rutas Creel–Divisadero'],
-        highlights: ['Mariscos y gastronomía', 'Puerto y playa', 'Tren CHEPE', 'Servicios y conectividad', 'Naturaleza costera', 'Base de operaciones'],
-        keyPlaces: ['Centro y zona gastronómica', 'Puerto Topolobampo', 'Estación del CHEPE', 'Parques y malecón', 'Mercados locales', 'Conexión a El Fuerte y Sinaloa'],
-        bestSeason: { when: 'Otoño a primavera; verano muy cálido.', climate: 'Cálido costero; humedad en temporada de lluvias.', expect: 'Sol y brisa la mayor parte del año; ideal para mariscos y salidas.' },
-        travelerProfile: { experienceType: 'Gastronomía y logística', travelerProfile: 'Viajeros que inician/terminan ruta, amantes del mar', suggestedStay: '1 noche típica', culturalLevel: 'Media — ciudad y puerto', landscapeType: 'Costa, puerto, ciudad', role: 'Punto cero de ruta costera' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Explorar experiencias desde aquí' }
-    },
-    'cerocahui': {
-        subtitle: 'Refugio jesuita y viñedos en un valle escondido',
-        intro: 'Cerocahui aparece como un secreto bien guardado: un valle rodeado de montañas donde una misión jesuita y viñedos de altura conviven con el silencio. Aquí la experiencia es de retiro e introspección — caminatas suaves, vistas al Cañón de Urique, vino local y la sensación de estar muy lejos del ruido del mundo. Es el destino para quien busca profundidad y calma.',
-        whyGo: ['Misión jesuita y patrimonio histórico', 'Viñedos de altura y vino local', 'Vistas al Cañón de Urique desde el Mirador del Gallego', 'Tranquilidad y retiro', 'Acceso a Barrancas con menor flujo turístico'],
-        highlights: ['Historia y misión', 'Vino y viñedos', 'Miradores al cañón', 'Senderismo suave', 'Cultura local', 'Estancia de retiro'],
-        keyPlaces: ['Misión de Cerocahui', 'Mirador del Gallego', 'Viñedos locales', 'Valle de Cerocahui', 'Conexión a Urique', 'Senderos y miradores'],
-        bestSeason: { when: 'Otoño a primavera; verano con lluvias.', climate: 'Templado de valle; noches frescas.', expect: 'Otoño ideal para viñedos; primavera verde y florida.' },
-        travelerProfile: { experienceType: 'Cultura y naturaleza serena', travelerProfile: 'Viajeros en busca de calma, parejas, retiros', suggestedStay: '2–3 noches', culturalLevel: 'Alta — misión y vino', landscapeType: 'Valle, viñedos, cañón', role: 'Destino de estancia' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Cotizar viaje' }
-    },
-    'basaseachi': {
-        subtitle: 'Donde una de las cascadas más altas de México cae al abismo',
-        intro: 'Basaseachi es naturaleza en estado puro: una cascada que se desploma desde más de 240 metros en un cañón de roca y bosque. El aire huele a pinos y humedad; los senderos llevan a miradores que quitan el aliento. No es un destino de paso: es una inmersión en el poder del agua y la piedra, con una oferta de senderismo y fotografía que exige tiempo y respeto.',
-        whyGo: ['Cascada de Basaseachi, una de las más altas de México', 'Bosque de pino y paisaje de barranca', 'Senderismo y miradores espectaculares', 'Naturaleza virgen y bien conservada', 'Experiencia de un día o pernocte'],
-        highlights: ['Cascada', 'Senderismo', 'Bosque y naturaleza', 'Fotografía', 'Aventura moderada', 'Paisaje monumental'],
-        keyPlaces: ['Cascada de Basaseachi', 'Mirador superior e inferior', 'Senderos del parque', 'Bosque de Candameña', 'Conexión desde Creel o Chihuahua'],
-        bestSeason: { when: 'Verano y otoño — mayor caudal; primavera también viable.', climate: 'Templado a fresco; lluvias en temporada.', expect: 'Cascada más impresionante con lluvias recientes; verano verde y húmedo.' },
-        travelerProfile: { experienceType: 'Naturaleza y senderismo', travelerProfile: 'Aventureros moderados, familias activas, fotógrafos', suggestedStay: '1–2 noches', culturalLevel: 'Baja — protagonista es la naturaleza', landscapeType: 'Cascada, bosque, cañón', role: 'Destino de naturaleza' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Hablar con un asesor' }
-    },
-    'guachochi': {
-        subtitle: 'La metrópoli Rarámuri y la puerta a la Barranca de Sinforosa',
-        intro: 'Guachochi es el corazón más auténtico de la Sierra Tarahumara: un lugar donde la cultura Rarámuri no es folclor, sino vida cotidiana. Desde aquí se accede a la imponente Barranca de Sinforosa y a comunidades que mantienen lengua, tradiciones y resistencia. Es un destino para viajeros que buscan verdadera profundidad cultural y paisajes que pocos llegan a conocer.',
-        whyGo: ['Mayor concentración de población Rarámuri', 'Acceso a la Barranca de Sinforosa', 'Cultura viva y auténtica', 'Paisajes poco masificados', 'Experiencias de turismo comunitario'],
-        highlights: ['Cultura Rarámuri', 'Barranca de Sinforosa', 'Turismo comunitario', 'Senderismo y aventura', 'Identidad originaria', 'Miradores remotos'],
-        keyPlaces: ['Guachochi cabecera', 'Barranca de Sinforosa', 'Comunidades Rarámuri', 'Kokoyome y alrededores', 'Miradores y rutas', 'Misión y centros culturales'],
-        bestSeason: { when: 'Marzo a noviembre; evitar frío extremo en invierno.', climate: 'Templado de altura; noches frías.', expect: 'Temporada seca ideal para caminatas; lluvias verano limitan algunas rutas.' },
-        travelerProfile: { experienceType: 'Cultura originaria y aventura', travelerProfile: 'Viajeros conscientes, culturales, aventureros', suggestedStay: '2–4 noches', culturalLevel: 'Muy alta — inmersión Rarámuri', landscapeType: 'Sierra, barranca, comunidades', role: 'Destino de profundidad' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Explorar experiencias desde aquí' }
-    },
-    'cuauhtemoc': {
-        subtitle: 'Praderas Menonitas y la manzana del norte de México',
-        intro: 'Cuauhtémoc sorprende: en medio del norte árido, colonias Menonitas mantienen un modo de vida que parece detenido en el tiempo. Quesos, manzanas, carretas y silencio. La región es además el gran productor de manzana del país. Aquí la experiencia es cultural y gastronómica — un contraste único con la Sierra y el desierto que lo rodean.',
-        whyGo: ['Colonias Menonitas y cultura única', 'Gastronomía menonita (queso, embutidos)', 'Región manzanera más importante de México', 'Contraste con la Sierra y el desierto', 'Tranquilidad y seguridad'],
-        highlights: ['Cultura Menonita', 'Gastronomía y mercados', 'Campos y praderas', 'Artesanía y productos locales', 'Fotografía y paisaje', 'Experiencia de contraste'],
-        keyPlaces: ['Colonias Menonitas', 'Mercados y queserías', 'Campos manzaneros', 'Cuauhtémoc ciudad', 'Rutas de día', 'Conexión a Creel y Chihuahua'],
-        bestSeason: { when: 'Todo el año; cosecha manzana en otoño.', climate: 'Seco y templado; inviernos fríos.', expect: 'Otoño ideal para cosecha y paisaje; primavera verde.' },
-        travelerProfile: { experienceType: 'Cultura y gastronomía', travelerProfile: 'Culturales, familias, foodies', suggestedStay: '1–2 noches', culturalLevel: 'Alta — mundo Menonita', landscapeType: 'Praderas, campos, llanura', role: 'Destino de contraste' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Cotizar viaje' }
-    },
-    'chihuahua': {
-        subtitle: 'Capital señorial y arranque clásico hacia la Sierra',
-        intro: 'Chihuahua es la ciudad que dio nombre al estado más grande de México: cantera, historia de la Revolución y haciendas que se pierden en el horizonte. Aquí Pancho Villa y la historia mexicana se palpan en cada edificio. Es el punto de partida oriental del Tren CHEPE y la base perfecta para quien quiere combinar ciudad, cultura y la subida épica a la Sierra Tarahumara.',
-        whyGo: ['Capital histórica y arquitectura señorial', 'Cuna de la Revolución y museos', 'Punto de partida del CHEPE hacia la Sierra', 'Haciendas y rutas del desierto', 'Conectividad aérea y terrestre'],
-        highlights: ['Historia y museos', 'Arquitectura y centro', 'Gastronomía norteña', 'Tren CHEPE', 'Haciendas y alrededores', 'Base de operaciones'],
-        keyPlaces: ['Centro histórico', 'Museo de la Revolución (Quinta Gameros)', 'Catedral y Palacio de Gobierno', 'Haciendas (Quinta Carolina, etc.)', 'Estación del CHEPE', 'Mercado y gastronomía'],
-        bestSeason: { when: 'Otoño y primavera; verano muy caliente.', climate: 'Desértico; inviernos fríos, veranos calurosos.', expect: 'Días despejados; noches frescas en otoño y primavera.' },
-        travelerProfile: { experienceType: 'Historia y ciudad', travelerProfile: 'Culturales, familias, quienes inician ruta CHEPE', suggestedStay: '1–2 noches', culturalLevel: 'Alta — historia y arquitectura', landscapeType: 'Ciudad, desierto, llanura', role: 'Base de inicio de ruta' },
-        cta: { primary: 'Ver paquetes relacionados', secondary: 'Hablar con un asesor' }
-    }
-}
-
-const destinations = [
-    {
-        id: '01',
-        name: 'Creel',
-        slug: 'creel',
-        region: 'Sierra Tarahumara (Central)',
-        coordinates: '27.7523° N, 107.6358° W',
-        altitude: '2,350 msnm',
-        season: 'Todo el año',
-        desc: 'El corazón latente de la Sierra. Campamento base para adentrarse en bosques antiguos, valles de formaciones milenarias y la herencia viva de la cultura Rarámuri.',
-        highlight: 'Base de Expedición',
-        image: '/images/destinations/creel.jpg',
-        tags: ['Pueblo Mágico', 'Misticismo']
-    },
-    {
-        id: '02',
-        name: 'Barrancas del Cobre',
-        slug: 'barrancas-del-cobre',
-        region: 'Sistema de Cañones',
-        coordinates: '27.5333° N, 107.7667° W',
-        altitude: 'Variable - Abismo Profundo',
-        season: 'Recomendado Otoño-Primavera',
-        desc: 'Un laberinto de cañones que desafía toda escala humana. Es un reino salvaje, inmenso, el epicentro indiscutible de la aventura en México.',
-        highlight: 'Cañones Monstruosos',
-        image: '/images/destinations/barrancas-del-cobre.jpg',
-        tags: ['Aventura Extrema', 'Monumental']
-    },
-    {
-        id: '03',
-        name: 'Divisadero',
-        slug: 'divisadero',
-        region: 'Circuito Barrancas',
-        coordinates: '27.5338° N, 107.8252° W',
-        altitude: '2,400 msnm',
-        season: 'Todo el año',
-        desc: 'Donde la tierra se desgarra majestuosa. El mirador icónico del Tren CHEPE y el cruce audaz del teleférico inmerso en la niebla y el vacío.',
-        highlight: 'Punto Panorámico',
-        image: '/images/destinations/divisadero.jpg',
-        tags: ['Teleférico', 'Fotografía']
-    },
-    {
-        id: '04',
-        name: 'El Fuerte',
-        slug: 'el-fuerte',
-        region: 'Sinaloa Norte',
-        coordinates: '26.4172° N, 108.6219° W',
-        altitude: '90 msnm',
-        season: 'Invierno y Primavera',
-        desc: 'Elegancia colonial vibrante a las orillas de un río histórico. Es el umbral perfecto, un prólogo cálido antes del ascenso épico a la alta montaña.',
-        highlight: 'Magia Colonial',
-        image: 'https://drive.google.com/uc?export=view&id=1QBGJrkjDhMGm6IntVPA9QvnAsa9FZer3',
-        tags: ['Historia', 'Pueblo Mágico']
-    },
-    {
-        id: '05',
-        name: 'Los Mochis',
-        slug: 'los-mochis',
-        region: 'Costa Pacífico N.O.',
-        coordinates: '25.7928° N, 108.9895° W',
-        altitude: '10 msnm',
-        season: 'Otoño a Primavera',
-        desc: 'Donde el Mar de Cortés besa la tierra, dando inicio (o fin) a la vía férrea más asombrosa de Latinoamérica. Un polo de riqueza gastronómica y portuaria.',
-        highlight: 'Puerto y Tren',
-        image: 'https://drive.google.com/uc?export=view&id=1EInQ_98ctAvzH6r9A2ZOrIvbKu1rWlnR',
-        tags: ['Mariscos', 'Punto Cero']
-    },
-    {
-        id: '06',
-        name: 'Cerocahui',
-        slug: 'cerocahui',
-        region: 'Valle Escóndido (Urique)',
-        coordinates: '27.3197° N, 108.0264° W',
-        altitude: '1,600 msnm',
-        season: 'Otoño - Primavera',
-        desc: 'Un remoto valle abrazado por montañas, resguardando una antigua misión jesuita y viñedos centenarios de altura. Un refugio de introspección absoluta.',
-        highlight: 'Retiro Jesuita',
-        image: 'https://drive.google.com/uc?export=view&id=1vsOkfb6amo6YEAnEG6BRFNh5K8ecjDQu',
-        tags: ['Vino', 'Mirador del Gallego']
-    },
-    {
-        id: '07',
-        name: 'Basaseachi',
-        slug: 'basaseachi',
-        region: 'Altos de Candameña',
-        coordinates: '28.1878° N, 108.2148° W',
-        altitude: '2,100 msnm',
-        season: 'Verano y Otoño (Lluvias)',
-        desc: 'Una grieta brutal en la piedra donde una de las cascadas más altas de México ruge al caer. Aire de bosque húmedo, pinos gigantes y senderos al abismo.',
-        highlight: 'Naturaleza Colosal',
-        image: 'https://drive.google.com/uc?export=view&id=1-yd2RnTEhrhOgzmHUWPhBQdEbGoGirUw',
-        tags: ['Senderismo', 'Cascada']
-    },
-    {
-        id: '08',
-        name: 'Guachochi',
-        slug: 'guachochi',
-        region: 'Alta Sierra Tarahumara',
-        coordinates: '26.8197° N, 107.0675° W',
-        altitude: '2,280 msnm',
-        season: 'Ideal Marzo-Noviembre',
-        desc: 'La verdadera metrópoli Rarámuri. Entre sus cumbres y barrancas se esconde Sinforosa y la mística de Kokoyome, una tierra puramente originaria.',
-        highlight: 'Cultura Originaria',
-        image: 'https://drive.google.com/uc?export=view&id=13v4cPXbF_m0g7Xw9l99k0CIjxyQaUBPE',
-        tags: ['Rutas Indígenas', 'Aislamiento']
-    },
-    {
-        id: '09',
-        name: 'Cuauhtémoc',
-        slug: 'cuauhtemoc',
-        region: 'Llanos Menonitas',
-        coordinates: '28.4069° N, 106.8653° W',
-        altitude: '2,040 msnm',
-        season: 'Todo el año',
-        desc: 'El encuentro surrealista de las praderas. Aquí, la asombrosa paz de las colonias Menonitas convive con la vasta región manzanera más grande del país.',
-        highlight: 'Corredor Cultural',
-        image: 'https://drive.google.com/uc?export=view&id=1SvD1FAN2zEL7BOdD3enpED0ZFEEbBfqo',
-        tags: ['Gastronomía Menonita', 'Mestizaje']
-    },
-    {
-        id: '10',
-        name: 'Chihuahua',
-        slug: 'chihuahua',
-        region: 'Desierto y Llanura',
-        coordinates: '28.6320° N, 106.0691° W',
-        altitude: '1,420 msnm',
-        season: 'Otoño y Primavera',
-        desc: 'El corazón señorial del norte. Ciudad de cantera, ecos de la Revolución y haciendas inmensas. El arranque clásico para cruzar la gran Sierra.',
-        highlight: 'Capital Histórica',
-        image: 'https://drive.google.com/uc?export=view&id=1kV_Aolq398pBAjpdOOhHAA6cQGfKtzkD',
-        tags: ['Orígenes', 'Arquitectura']
-    },
-]
+import { useTranslation } from '@/contexts/LocaleContext'
+import { getAtlasData, type LocaleAtlas } from '@/lib/atlas-data'
 
 export function DestinationsFlagship() {
+    const { t, locale } = useTranslation()
+    const { destinations, modalData } = getAtlasData((locale || 'es') as LocaleAtlas)
     const [activeIndex, setActiveIndex] = useState(0)
     const [modalOpen, setModalOpen] = useState(false)
     const [modalDestinationIndex, setModalDestinationIndex] = useState(0)
@@ -373,12 +122,12 @@ export function DestinationsFlagship() {
                 <div className="flex flex-col mb-16">
                     <span className="text-[#B7925A] tracking-[0.35em] uppercase text-[8px] font-semibold mb-4 flex items-center gap-3">
                         <Compass size={11} strokeWidth={1.5} />
-                        Atlas de Exploración
+                        {t('destinations.atlasTitle')}
                     </span>
                     <h2 className="text-[#CFC4B4]/40 text-[9px] sm:text-[10px] tracking-[0.25em] uppercase mb-1 flex items-center gap-2">
-                        <span className="w-2 h-px bg-[#BFA884]/30" /> Operadora Simatiri
+                        <span className="w-2 h-px bg-[#BFA884]/30" /> {t('destinations.operadoraSimatiri')}
                     </h2>
-                    <h3 className="text-[#F4EFE7]/80 text-sm font-serif italic ml-4">Norte de México</h3>
+                    <h3 className="text-[#F4EFE7]/80 text-sm font-serif italic ml-4">{t('destinations.norteMexico')}</h3>
                 </div>
 
                 {/* Index List - Extreme refinement */}
@@ -425,8 +174,8 @@ export function DestinationsFlagship() {
 
                 {/* Footer caption */}
                 <div className="mt-12 text-[8px] text-[#CFC4B4]/30 uppercase tracking-[0.5em] flex justify-between px-2">
-                    <span>Sierra Tarahumara</span>
-                    <span>10 / Destinos</span>
+                    <span>{t('destinations.sierraTarahumara')}</span>
+                    <span>{destinations.length} / {t('destinations.destinosLabel')}</span>
                 </div>
             </div>
 
@@ -436,7 +185,7 @@ export function DestinationsFlagship() {
                     <button
                         type="button"
                         onClick={() => setActiveIndex((prev) => (prev === 0 ? destinations.length - 1 : prev - 1))}
-                        aria-label="Destino anterior"
+                        aria-label={t('destinations.destinoAnterior')}
                         className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center border border-[#BFA884]/25 bg-[#181410]/60 text-[#CFC4B4] hover:text-[#F4EFE7] hover:border-[#B7925A]/50 hover:bg-[#181410]/80 transition-all duration-300"
                     >
                         <ChevronLeft size={20} strokeWidth={1.5} className="text-[#F4EFE7]/90" />
@@ -468,7 +217,7 @@ export function DestinationsFlagship() {
                     <button
                         type="button"
                         onClick={() => setActiveIndex((prev) => (prev === destinations.length - 1 ? 0 : prev + 1))}
-                        aria-label="Destino siguiente"
+                        aria-label={t('destinations.destinoSiguiente')}
                         className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center border border-[#BFA884]/25 bg-[#181410]/60 text-[#CFC4B4] hover:text-[#F4EFE7] hover:border-[#B7925A]/50 hover:bg-[#181410]/80 transition-all duration-300"
                     >
                         <ChevronRight size={20} strokeWidth={1.5} className="text-[#F4EFE7]/90" />
@@ -523,11 +272,11 @@ export function DestinationsFlagship() {
                                 className="flex flex-row md:flex-col gap-6 md:gap-8 border-l border-[#B7925A]/30 pl-5 min-w-[140px]"
                             >
                                 <div className="flex flex-col gap-1.5 focus">
-                                    <span className="text-[#CFC4B4]/50 font-mono text-[8px] tracking-[0.3em] uppercase">Altitud</span>
+                                    <span className="text-[#CFC4B4]/50 font-mono text-[8px] tracking-[0.3em] uppercase">{t('destinations.altitud')}</span>
                                     <span className="text-[#F4EFE7]/90 text-xs font-medium tracking-wider">{active.altitude}</span>
                                 </div>
                                 <div className="flex flex-col gap-1.5 border-l md:border-l-0 border-[#BFA884]/20 pl-6 md:pl-0">
-                                    <span className="text-[#CFC4B4]/50 font-mono text-[8px] tracking-[0.3em] uppercase">Temporada</span>
+                                    <span className="text-[#CFC4B4]/50 font-mono text-[8px] tracking-[0.3em] uppercase">{t('destinations.temporada')}</span>
                                     <span className="text-[#F4EFE7]/90 text-xs font-medium tracking-wider">{active.season}</span>
                                 </div>
                             </motion.div>
@@ -554,13 +303,13 @@ export function DestinationsFlagship() {
                                     >
                                         <div className="absolute inset-0 bg-[#B7925A]/90 -translate-x-[101%] group-hover:translate-x-0 transition-transform duration-[800ms] ease-[0.33,1,0.68,1] z-0" />
                                         <span className="relative z-10 flex items-center gap-4 text-[#F4EFE7]">
-                                            Adentrarse <ArrowUpRight size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-700" strokeWidth={1.5} />
+                                            {t('destinations.adentrarse')} <ArrowUpRight size={12} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-700" strokeWidth={1.5} />
                                         </span>
                                     </button>
 
                                     {/* Ultra fine Editorial Tags */}
                                     <div className="hidden md:flex flex-col gap-2.5">
-                                        <span className="text-[#CFC4B4]/40 text-[8px] uppercase tracking-[0.4em] font-mono">Atributos</span>
+                                        <span className="text-[#CFC4B4]/40 text-[8px] uppercase tracking-[0.4em] font-mono">{t('destinations.atributos')}</span>
                                         <div className="flex items-center gap-3">
                                             {active.tags.map((tag, i) => (
                                                 <div key={tag} className="flex items-center gap-3">
@@ -584,7 +333,7 @@ export function DestinationsFlagship() {
             <AnimatePresence>
                 {modalOpen && (() => {
                     const dest = destinations[modalDestinationIndex]
-                    const data = destinationModalData[dest.slug]
+                    const data = modalData[dest.slug]
                     if (!data) return null
                     return (
                         <>
@@ -613,7 +362,7 @@ export function DestinationsFlagship() {
                                     type="button"
                                     onClick={closeModal}
                                     className="absolute top-6 right-6 z-10 p-2 rounded-full border border-[#BFA884]/30 bg-[#181410]/80 text-[#CFC4B4] hover:text-[#F4EFE7] hover:border-[#B7925A]/50 transition-all duration-300"
-                                    aria-label="Cerrar"
+                                    aria-label={t('common.cerrar')}
                                 >
                                     <X size={20} strokeWidth={1.5} />
                                 </button>
@@ -642,7 +391,7 @@ export function DestinationsFlagship() {
                                     <div className="px-8 md:px-12 lg:px-16 py-10 md:py-14 space-y-14 md:space-y-16">
                                         {/* 2. INTRO EDITORIAL */}
                                         <section>
-                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-4">Introducción</h3>
+                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-4">{t('destinations.introduccion')}</h3>
                                             <p className="text-[#CFC4B4]/95 text-base md:text-lg leading-[1.9] max-w-3xl font-light">
                                                 {data.intro}
                                             </p>
@@ -650,7 +399,7 @@ export function DestinationsFlagship() {
 
                                         {/* 3. POR QUÉ IR */}
                                         <section>
-                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">Por qué ir</h3>
+                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">{t('destinations.porQueIr')}</h3>
                                             <ul className="space-y-3 max-w-2xl">
                                                 {data.whyGo.map((item, i) => (
                                                     <li key={i} className="flex gap-3 text-[#F4EFE7]/90 text-sm md:text-base font-light">
@@ -663,7 +412,7 @@ export function DestinationsFlagship() {
 
                                         {/* 4. EXPERIENCIAS / HIGHLIGHTS */}
                                         <section>
-                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">Experiencias y highlights</h3>
+                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">{t('destinations.experienciasHighlights')}</h3>
                                             <div className="flex flex-wrap gap-3">
                                                 {data.highlights.map((h) => (
                                                     <span key={h} className="px-4 py-2 bg-[#181410] border border-[#BFA884]/15 text-[12px] text-[#CFC4B4]/90 uppercase tracking-[0.15em]">
@@ -675,7 +424,7 @@ export function DestinationsFlagship() {
 
                                         {/* 5. LUGARES CLAVE */}
                                         <section>
-                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">Lugares clave</h3>
+                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">{t('destinations.lugaresClave')}</h3>
                                             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-3xl">
                                                 {data.keyPlaces.map((place, i) => (
                                                     <li key={i} className="flex items-center gap-2 text-[#CFC4B4]/90 text-sm md:text-base font-light">
@@ -688,18 +437,18 @@ export function DestinationsFlagship() {
 
                                         {/* 6. MEJOR TEMPORADA */}
                                         <section>
-                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">Mejor temporada</h3>
+                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">{t('destinations.mejorTemporada')}</h3>
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
                                                 <div>
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.25em] block mb-1">Cuándo</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.25em] block mb-1">{t('destinations.cuando')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.bestSeason.when}</p>
                                                 </div>
                                                 <div>
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.25em] block mb-1">Clima</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.25em] block mb-1">{t('destinations.clima')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.bestSeason.climate}</p>
                                                 </div>
                                                 <div>
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.25em] block mb-1">Qué esperar</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.25em] block mb-1">{t('destinations.queEsperar')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.bestSeason.expect}</p>
                                                 </div>
                                             </div>
@@ -707,30 +456,30 @@ export function DestinationsFlagship() {
 
                                         {/* 7. PERFIL DEL DESTINO */}
                                         <section>
-                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">Perfil del destino</h3>
+                                            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B7925A] font-medium mb-6">{t('destinations.perfilDestino')}</h3>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl">
                                                 <div className="border-l border-[#B7925A]/30 pl-4">
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">Tipo de experiencia</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">{t('destinations.tipoExperiencia')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.travelerProfile.experienceType}</p>
                                                 </div>
                                                 <div className="border-l border-[#B7925A]/30 pl-4">
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">Perfil del viajero</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">{t('destinations.perfilViajero')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.travelerProfile.travelerProfile}</p>
                                                 </div>
                                                 <div className="border-l border-[#B7925A]/30 pl-4">
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">Estancia sugerida</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">{t('destinations.estanciaSugerida')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.travelerProfile.suggestedStay}</p>
                                                 </div>
                                                 <div className="border-l border-[#B7925A]/30 pl-4">
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">Conexión cultural</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">{t('destinations.conexionCultural')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.travelerProfile.culturalLevel}</p>
                                                 </div>
                                                 <div className="border-l border-[#B7925A]/30 pl-4">
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">Paisaje</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">{t('destinations.paisaje')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.travelerProfile.landscapeType}</p>
                                                 </div>
                                                 <div className="border-l border-[#B7925A]/30 pl-4">
-                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">Rol en la ruta</span>
+                                                    <span className="text-[#CFC4B4]/50 text-[9px] uppercase tracking-[0.2em] block mb-1">{t('destinations.rolRuta')}</span>
                                                     <p className="text-[#F4EFE7]/90 text-sm font-light">{data.travelerProfile.role}</p>
                                                 </div>
                                             </div>

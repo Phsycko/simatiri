@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Clock, ArrowRight, Users } from 'lucide-react'
+import { cookies } from 'next/headers'
 import { PageHero } from '@/components/ui/PageHero'
 import { prisma } from '@/lib/db/prisma'
 import { TourTarahumaraCard } from '@/components/experiences/TourTarahumaraCard'
@@ -11,7 +10,11 @@ import { TourRecowataCard } from '@/components/experiences/TourRecowataCard'
 import { TourGuachochiYKokoyomeCard } from '@/components/experiences/TourGuachochiYKokoyomeCard'
 import { TourCerocahuiCard } from '@/components/experiences/TourCerocahuiCard'
 import { TourMaguarichiCard } from '@/components/experiences/TourMaguarichiCard'
+import { HikingBarrancasCard } from '@/components/experiences/HikingBarrancasCard'
+import { BuceoMarCortesCard } from '@/components/experiences/BuceoMarCortesCard'
+import { GenericExperienceCard } from '@/components/experiences/GenericExperienceCard'
 import { buildShareMeta } from '@/lib/metadata'
+import { LOCALE_COOKIE, getLocaleFromCookie, getT } from '@/lib/i18n'
 
 const title = 'Experiencias y Tours | Simatiri Experience'
 const description = 'Tours y experiencias auténticas en la Sierra Tarahumara: Barrancas del Cobre, Tour Tarahumara, Basaseachi, Menonitas y más.'
@@ -23,18 +26,52 @@ export const metadata: Metadata = {
 }
 
 export default async function ExperiencesPage() {
-    const tours = await prisma.tour.findMany({
+  const cookieStore = await cookies()
+  const locale = getLocaleFromCookie(cookieStore.get(LOCALE_COOKIE)?.value)
+  const t = getT(locale)
+
+  const tours = await prisma.tour.findMany({
         include: {
             destination: true,
             tierPrices: { orderBy: { minPax: 'asc' } },
         },
     })
 
+    const hasHiking = tours.some((tour: any) =>
+        tour.title === 'Hiking en Barrancas del Cobre' || tour.title === 'Hiking Barrancas del Cobre'
+    )
+    const hasBuceo = tours.some((tour: any) =>
+        tour.title === 'Buceo en el Mar de Cortés' || tour.title === 'Buceo Mar de Cortés'
+    )
+
+    const hikingPlaceholder = {
+        id: 'hiking-barrancas',
+        title: 'Hiking en Barrancas del Cobre',
+        durationHours: 8,
+        destination: { name: 'Barrancas del Cobre' },
+        tierPrices: [{ id: 'hp1', pricePerPerson: 5000 }],
+        description: 'Vive la sierra a pie: senderos entre cañones, miradores de vértigo y silencio solo roto por el viento.',
+    }
+    const buceoPlaceholder = {
+        id: 'buceo-mar-cortes',
+        title: 'Buceo en el Mar de Cortés',
+        durationHours: 6,
+        destination: { name: 'Los Mochis' },
+        tierPrices: [{ id: 'bp1', pricePerPerson: 5500 }],
+        description: 'Explora el acuario del mundo: salida desde el puerto de Topolobampo hacia aguas del Mar de Cortés.',
+    }
+
+    const toursToShow = [
+        ...tours,
+        ...(hasHiking ? [] : [hikingPlaceholder]),
+        ...(hasBuceo ? [] : [buceoPlaceholder]),
+    ]
+
     return (
         <>
             <PageHero
-                title="Vive la Sierra Tarahumara"
-                subtitle="Tours operados con guías expertos, con acceso a comunidades Rarámuri y paisajes que no encontrarás en ningún otro lugar del mundo."
+                title={t('experiences.heroTitle')}
+                subtitle={t('experiences.heroSubtitle')}
                 size="md"
                 backgroundImage="/images/heroes/experiencias-hero.jpg"
                 overlay="linear-gradient(rgba(0,0,0,0.38), rgba(0,0,0,0.42))"
@@ -42,7 +79,7 @@ export default async function ExperiencesPage() {
 
             <section className="w-full bg-[#FFF8F5]">
                 <div className="py-20 px-8 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {tours.map((tour: any) => {
+                    {toursToShow.map((tour: any) => {
                         if (tour.title === 'Tour Tarahumara') {
                             return <TourTarahumaraCard key={tour.id} tour={tour} />
                         }
@@ -67,50 +104,14 @@ export default async function ExperiencesPage() {
                         if (tour.title === 'Tour Maguarichi' || tour.title === 'Tour Maguarichi y los Géisers de Chihuahua') {
                             return <TourMaguarichiCard key={tour.id} tour={tour} />
                         }
+                        if (tour.title === 'Hiking en Barrancas del Cobre' || tour.title === 'Hiking Barrancas del Cobre') {
+                            return <HikingBarrancasCard key={tour.id} tour={tour} />
+                        }
+                        if (tour.title === 'Buceo en el Mar de Cortés' || tour.title === 'Buceo Mar de Cortés') {
+                            return <BuceoMarCortesCard key={tour.id} tour={tour} />
+                        }
 
-                        const minPrice = tour.tierPrices[0]?.pricePerPerson
-                        const maxPrice = tour.tierPrices[tour.tierPrices.length - 1]?.pricePerPerson
-                        return (
-                            <Link
-                                key={tour.id}
-                                href={`/experiences/${tour.id}`}
-                                className="group bg-white border border-[#DDD8D2] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(28,24,18,0.06),0_12px_32px_rgba(28,24,18,0.12)] hover:shadow-[0_8px_24px_rgba(28,24,18,0.08),0_24px_56px_rgba(28,24,18,0.14)] hover:border-[#D0CBC4] transition-all duration-300"
-                            >
-                                <div className="aspect-[4/3] bg-gradient-to-br from-[#2e4a3d] to-[#0a192f] relative">
-                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent h-24" />
-                                    <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white/70 text-xs">
-                                        <Clock size={13} />
-                                        {tour.durationHours} Horas
-                                    </div>
-                                </div>
-                                <div className="p-6">
-                                    <div className="text-xs text-[#7B4B2A] uppercase tracking-widest font-semibold mb-2">
-                                        {tour.destination?.name}
-                                    </div>
-                                    <h2 className="font-serif text-xl text-[#0a192f] mb-3 group-hover:text-[#2e4a3d] transition-colors">{tour.title}</h2>
-                                    <p className="text-sm text-gray-500 leading-relaxed mb-5 line-clamp-2">{tour.description}</p>
-
-                                    {/* Pricing Tiers */}
-                                    <div className="bg-gray-50 rounded-xl p-4 mb-5">
-                                        <div className="flex items-center gap-2 text-xs text-gray-400 uppercase tracking-wider font-semibold mb-3">
-                                            <Users size={12} /> Precio por persona
-                                        </div>
-                                        <div className="space-y-1.5">
-                                            {tour.tierPrices.slice(0, 3).map((t: any) => (
-                                                <div key={t.id} className="flex justify-between text-sm">
-                                                    <span className="text-gray-600">{t.minPax}{t.maxPax < 100 ? `–${t.maxPax}` : '+'} pax</span>
-                                                    <span className="font-semibold text-[#0a192f]">${t.pricePerPerson.toLocaleString()}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-xs font-semibold text-[#7B4B2A]">
-                                        Ver experiencia completa <ArrowRight size={13} />
-                                    </div>
-                                </div>
-                            </Link>
-                        )
+                        return <GenericExperienceCard key={tour.id} tour={tour} />
                     })}
                 </div>
             </section>

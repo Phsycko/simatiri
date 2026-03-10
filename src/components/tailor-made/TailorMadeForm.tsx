@@ -2,31 +2,22 @@
 
 import { useState } from 'react'
 import type { TailorMadePayload } from '@/app/api/tailor-made/route'
+import { useTranslation } from '@/contexts/LocaleContext'
 
-const BUDGETS = [
-  'Hasta $10,000 MXN por persona',
-  '$10,000 – $20,000 MXN por persona',
-  '$20,000 – $40,000 MXN por persona',
-  '$40,000+ MXN por persona',
-  'No tengo presupuesto definido aún',
-]
+const BUDGET_KEYS = ['budgetHasta10', 'budget10a20', 'budget20a40', 'budget40mas', 'budgetNoDefinido'] as const
+const INTEREST_KEYS = ['interesTrenCHEPE', 'interesBarrancas', 'interesCultura', 'interesSenderismo', 'interesFotografia', 'interesGastronomia', 'interesHoteles', 'interesHistoria'] as const
+const DURATION_KEYS = ['duracion3d', 'duracion5d', 'duracion7d', 'duracionNoSe'] as const
 
-const INTERESTS = [
-  'Tren CHEPE',
-  'Barrancas del Cobre',
-  'Cultura Rarámuri',
-  'Senderismo / Aventura',
-  'Fotografía',
-  'Gastronomía',
-  'Hoteles de lujo',
-  'Historia Colonial',
-]
-
-const DURATION_OPTIONS = ['3-4 días', '5-6 días', '7+ días', 'No sé aún']
-
-export function TailorMadeForm() {
+export function TailorMadeForm({
+  initialFechaLlegada,
+  initialFechaSalida,
+}: {
+  initialFechaLlegada?: string
+  initialFechaSalida?: string
+} = {}) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const { t } = useTranslation()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -37,11 +28,11 @@ export function TailorMadeForm() {
     const correo = (fd.get('correo') as string)?.trim()
     if (!nombreCompleto || !correo) {
       setStatus('error')
-      setErrorMessage('Por favor completa nombre completo y correo electrónico.')
+      setErrorMessage(t('tailorMade.errorNombreCorreo'))
       return
     }
 
-    const intereses = INTERESTS.filter((i) => fd.get(`interes-${i}`) === 'on')
+    const intereses = INTEREST_KEYS.filter((key) => fd.get(`interes-${key}`) === 'on').map((key) => t(`tailorMade.${key}`))
     const presupuesto = (fd.get('presupuesto') as string) || ''
 
     const payload: TailorMadePayload = {
@@ -71,14 +62,14 @@ export function TailorMadeForm() {
 
       if (!res.ok) {
         setStatus('error')
-        setErrorMessage((data.error as string) || 'Error al enviar. Intenta de nuevo.')
+        setErrorMessage((data.error as string) || t('contactForm.errorEnviar'))
         return
       }
       setStatus('success')
       form.reset()
     } catch {
       setStatus('error')
-      setErrorMessage('Error de conexión. Revisa tu red e intenta de nuevo.')
+      setErrorMessage(t('contactForm.errorConexion'))
     }
   }
 
@@ -90,19 +81,19 @@ export function TailorMadeForm() {
     <form onSubmit={handleSubmit} className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Nombre completo *</label>
+          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.nombreCompleto')}</label>
           <input name="nombreCompleto" type="text" required disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Correo electrónico *</label>
+          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.correoElectronico')}</label>
           <input name="correo" type="email" required disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Teléfono / WhatsApp</label>
+          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.telefonoWhatsApp')}</label>
           <input name="telefono" type="tel" disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">País de origen</label>
+          <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.paisOrigen')}</label>
           <input name="pais" type="text" disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" />
         </div>
       </div>
@@ -110,22 +101,22 @@ export function TailorMadeForm() {
       <hr className="border-gray-100" />
 
       <div>
-        <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-2">Paso 2</div>
-        <h3 className="font-serif text-xl text-[#0a192f] mb-5">Detalles del Viaje</h3>
+        <div className="text-xs uppercase tracking-widest text-[#7B4B2A] font-semibold mb-2">{t('tailorMade.paso2')}</div>
+        <h3 className="font-serif text-xl text-[#0a192f] mb-5">{t('tailorMade.detallesViaje')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Número de viajeros</label>
-            <input name="numeroViajeros" type="number" min={1} disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" placeholder="2" />
+            <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.numeroViajeros')}</label>
+            <input name="numeroViajeros" type="number" min={1} disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" placeholder={t('tailorMade.placeholderViajeros')} />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Fecha tentativa de llegada</label>
-            <input name="fechaLlegada" type="date" disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" />
+            <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.fechaTentativaLlegada')}</label>
+            <input name="fechaLlegada" type="date" defaultValue={initialFechaLlegada} disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors disabled:opacity-60" />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Duración estimada</label>
+            <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.duracionEstimada')}</label>
             <select name="duracion" disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors bg-white disabled:opacity-60">
-              {DURATION_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
+              {DURATION_KEYS.map((key) => (
+                <option key={key} value={t(`tailorMade.${key}`)}>{t(`tailorMade.${key}`)}</option>
               ))}
             </select>
           </div>
@@ -133,25 +124,25 @@ export function TailorMadeForm() {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">Presupuesto estimado por persona</label>
+        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">{t('tailorMade.presupuestoEstimado')}</label>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {BUDGETS.map((b) => (
-            <label key={b} className="flex items-center gap-3 p-3.5 border border-gray-200 rounded-xl cursor-pointer hover:border-[#7B4B2A] transition-colors group">
-              <input type="radio" name="presupuesto" value={b} disabled={isLoading} className="accent-[#7B4B2A]" />
-              <span className="text-sm text-gray-700 group-hover:text-[#0a192f] transition-colors">{b}</span>
+          {BUDGET_KEYS.map((key) => (
+            <label key={key} className="flex items-center gap-3 p-3.5 border border-gray-200 rounded-xl cursor-pointer hover:border-[#7B4B2A] transition-colors group">
+              <input type="radio" name="presupuesto" value={t(`tailorMade.${key}`)} disabled={isLoading} className="accent-[#7B4B2A]" />
+              <span className="text-sm text-gray-700 group-hover:text-[#0a192f] transition-colors">{t(`tailorMade.${key}`)}</span>
             </label>
           ))}
         </div>
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">¿Qué te interesa? (selecciona varios)</label>
+        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">{t('tailorMade.queTeInteresa')}</label>
         <div className="flex flex-wrap gap-2">
-          {INTERESTS.map((i) => (
-            <label key={i} className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name={`interes-${i}`} value="on" disabled={isLoading} className="hidden peer" />
+          {INTEREST_KEYS.map((key) => (
+            <label key={key} className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name={`interes-${key}`} value="on" disabled={isLoading} className="hidden peer" />
               <span className="px-4 py-2 text-sm border border-gray-200 rounded-full text-gray-600 peer-checked:bg-[#7B4B2A] peer-checked:text-white peer-checked:border-[#7B4B2A] hover:border-gray-400 transition-all cursor-pointer select-none">
-                {i}
+                {t(`tailorMade.${key}`)}
               </span>
             </label>
           ))}
@@ -159,14 +150,14 @@ export function TailorMadeForm() {
       </div>
 
       <div>
-        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Notas adicionales o solicitudes especiales</label>
-        <textarea name="notas" rows={4} disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors resize-none disabled:opacity-60" placeholder="Cuéntanos cualquier detalle que necesites: alergias, movilidad reducida, celebraciones especiales, preferencias de hotel..." />
+        <label className="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('tailorMade.notasAdicionales')}</label>
+        <textarea name="notas" rows={4} disabled={isLoading} className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#7B4B2A] transition-colors resize-none disabled:opacity-60" placeholder={t('tailorMade.placeholderNotas')} />
       </div>
 
       {isSuccess && (
         <div className="rounded-xl border border-[#2e4a3d]/40 bg-[#2e4a3d]/10 px-5 py-4 text-center">
-          <p className="font-serif text-lg text-[#1C1812] mb-1">Solicitud enviada correctamente</p>
-          <p className="text-sm text-gray-600">Te responderemos en menos de 24 horas a tu correo.</p>
+          <p className="font-serif text-lg text-[#1C1812] mb-1">{t('tailorMade.solicitudEnviada')}</p>
+          <p className="text-sm text-gray-600">{t('experienceQuote.responderemos24')}</p>
         </div>
       )}
 
@@ -181,11 +172,11 @@ export function TailorMadeForm() {
         disabled={isLoading}
         className="w-full bg-[#7B4B2A] hover:bg-[#6B4028] disabled:bg-[#7B4B2A]/70 disabled:cursor-not-allowed text-white text-sm font-semibold uppercase tracking-widest py-4 rounded-full transition-colors"
       >
-        {isLoading ? 'Enviando...' : 'Solicitar Cotización Personalizada'}
+        {isLoading ? t('common.enviando') : t('tailorMade.solicitarCotizacionPersonalizada')}
       </button>
 
       <p className="text-center text-xs text-gray-400">
-        Respondemos en menos de 24 horas con una propuesta personalizada sin compromiso.
+        {t('tailorMade.footerNota')}
       </p>
     </form>
   )

@@ -3,10 +3,13 @@
 import { useState } from 'react'
 import { MapPin } from 'lucide-react'
 import { TourTarahumaraModal } from '@/components/experiences/TourTarahumaraModal'
-import Image from 'next/image';
+import Image from 'next/image'
+import { useTranslation } from '@/contexts/LocaleContext'
 
 export function TourTarahumaraHomeCard({ tour }: { tour: any }) {
     const [isOpen, setIsOpen] = useState(false)
+    const { t } = useTranslation()
+    const price = (tour.tierPrices?.[0]?.pricePerPerson ?? 0) + 200
 
     return (
         <>
@@ -24,11 +27,11 @@ export function TourTarahumaraHomeCard({ tour }: { tour: any }) {
                 </div>
                 <div className="p-6">
                     <h3 className="font-serif text-xl text-[#0a192f] mb-2 group-hover:text-[#2e4a3d] transition-colors">{tour.title}</h3>
-                    <p className="text-sm text-gray-500 mb-4">{tour.durationHours} Horas de experiencia</p>
+                    <p className="text-sm text-gray-500 mb-4">{tour.durationHours} {t('home.horasExperiencia')}</p>
                     <div className="flex justify-between items-center border-t border-gray-100 pt-4">
-                        <span className="text-xs text-gray-400">Por persona</span>
+                        <span className="text-xs text-gray-400">{t('common.porPersona')}</span>
                         <span className="font-bold text-[#7B4B2A]">
-                            Desde ${tour.tierPrices?.[0]?.pricePerPerson?.toLocaleString() ?? 0} MXN
+                            {t('home.desdeMxn')} ${price.toLocaleString()} {t('common.mxn')}
                         </span>
                     </div>
                 </div>

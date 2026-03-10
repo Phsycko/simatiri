@@ -1,23 +1,24 @@
 'use client'
 
+import { useTranslation } from '@/contexts/LocaleContext'
+
 export function VigenciaContactNew() {
+  const { t } = useTranslation()
   return (
     <section className="bg-[#FAF5EF] text-[#1C1812] py-16 sm:py-20 px-6 sm:px-10 border-t border-[#1C1812]/08">
       <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
-        {/* Vigencia */}
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7B4B2A] mb-4">
-            Vigencia del convenio
+            {t('hotels.vigenciaConvenio')}
           </p>
           <p className="font-serif text-lg sm:text-xl text-[#1C1812]">
-            Desde 1 de marzo del 2026 hasta 28 de febrero del 2027.
+            {t('hotels.vigenciaFechas')}
           </p>
         </div>
 
-        {/* Contacto */}
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#7B4B2A] mb-4">
-            Contacto
+            {t('hotels.contacto')}
           </p>
           <div className="space-y-4">
             <div className="font-mono text-sm sm:text-base tracking-wide text-[#1C1812]">
@@ -37,10 +38,9 @@ export function VigenciaContactNew() {
         </div>
       </div>
 
-      {/* Firma institucional */}
       <div className="max-w-4xl mx-auto mt-16 pt-10 border-t border-[#1C1812]/10 text-center">
         <p className="font-serif text-lg sm:text-xl italic text-[#1C1812]">
-          Tus aliados en el Estado Grande
+          {t('hotels.tusAliados')}
         </p>
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1C1812]/50 mt-1">
           RNT: 0108009be33c3
