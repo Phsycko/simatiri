@@ -1,6 +1,7 @@
 'use client'
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { LOCALE_COOKIE, type Locale, DEFAULT_LOCALE, getMessage, messages } from '@/lib/i18n'
 
 type LocaleContextValue = {
@@ -31,6 +32,7 @@ export function LocaleProvider({
   children: React.ReactNode
   initialLocale?: Locale
 }) {
+  const router = useRouter()
   const [locale, setLocaleState] = useState<Locale>(() => {
     if (initialLocale && (initialLocale === 'es' || initialLocale === 'en')) return initialLocale
     const fromCookie = getCookie(LOCALE_COOKIE)
@@ -42,7 +44,8 @@ export function LocaleProvider({
     setLocaleState(next)
     setCookie(LOCALE_COOKIE, next)
     if (typeof document !== 'undefined') document.documentElement.lang = next
-  }, [])
+    router.refresh()
+  }, [router])
 
   useEffect(() => {
     document.documentElement.lang = locale
