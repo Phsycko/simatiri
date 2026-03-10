@@ -46,7 +46,7 @@ const buceoPlaceholder = {
   description: 'Explora el acuario del mundo: salida desde el puerto de Topolobampo hacia aguas del Mar de Cortés.',
 }
 
-/** Fallback cuando la BD no está disponible (ej. Vercel sin DATABASE_URL). Misma estructura que Prisma para que las cards muestren toda la info. */
+/** Fallback cuando la BD no está disponible (ej. Vercel sin DATABASE_URL). 10 experiencias como en localhost. */
 const fallbackTours = [
   {
     id: 1,
@@ -82,6 +82,66 @@ const fallbackTours = [
       { id: 7, minPax: 1, maxPax: 2, pricePerPerson: 1500 },
       { id: 8, minPax: 3, maxPax: 5, pricePerPerson: 1300 },
       { id: 9, minPax: 6, maxPax: 10, pricePerPerson: 1000 },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Tour Menonitas',
+    durationHours: 6,
+    destination: { name: 'Cuauhtémoc' },
+    description: 'Lugares: Campos menonitas, queserías, museo y cultura menonita en la región.',
+    tierPrices: [
+      { id: 10, minPax: 1, maxPax: 2, pricePerPerson: 1100 },
+      { id: 11, minPax: 3, maxPax: 5, pricePerPerson: 950 },
+      { id: 12, minPax: 6, maxPax: 10, pricePerPerson: 850 },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Tour Recowata',
+    durationHours: 10,
+    destination: { name: 'Creel' },
+    description: 'Lugares: Recowata, termas y paisaje serrano.',
+    tierPrices: [
+      { id: 13, minPax: 1, maxPax: 2, pricePerPerson: 400 },
+      { id: 14, minPax: 3, maxPax: 5, pricePerPerson: 350 },
+      { id: 15, minPax: 6, maxPax: 10, pricePerPerson: 300 },
+    ],
+  },
+  {
+    id: 6,
+    title: 'Tour Guachochi y Kokoyome',
+    durationHours: 12,
+    destination: { name: 'Guachochi' },
+    description: 'Lugares: Guachochi, Kokoyome, cascadas y comunidades Rarámuri.',
+    tierPrices: [
+      { id: 16, minPax: 1, maxPax: 2, pricePerPerson: 2000 },
+      { id: 17, minPax: 3, maxPax: 5, pricePerPerson: 1800 },
+      { id: 18, minPax: 6, maxPax: 10, pricePerPerson: 1600 },
+    ],
+  },
+  {
+    id: 7,
+    title: 'Tour Cerocahui y Mirador del Gallego',
+    durationHours: 10,
+    destination: { name: 'Cerocahui' },
+    description: 'Lugares: Cerocahui, Mirador del Gallego, viñedos y misión.',
+    tierPrices: [
+      { id: 19, minPax: 1, maxPax: 2, pricePerPerson: 1300 },
+      { id: 20, minPax: 3, maxPax: 5, pricePerPerson: 1150 },
+      { id: 21, minPax: 6, maxPax: 10, pricePerPerson: 1000 },
+    ],
+  },
+  {
+    id: 8,
+    title: 'Tour Maguarichi y los Géisers de Chihuahua',
+    durationHours: 10,
+    destination: { name: 'Maguarichi' },
+    description: 'Lugares: Maguarichi, géisers y paisaje único.',
+    tierPrices: [
+      { id: 22, minPax: 1, maxPax: 2, pricePerPerson: 1500 },
+      { id: 23, minPax: 3, maxPax: 5, pricePerPerson: 1300 },
+      { id: 24, minPax: 6, maxPax: 10, pricePerPerson: 1100 },
     ],
   },
   hikingPlaceholder,
