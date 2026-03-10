@@ -1,8 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, MapPin, Clock, Train, Hotel, Map, ListStart } from 'lucide-react'
 import { useTranslation } from '@/contexts/LocaleContext'
+import { ExperienceQuoteModal } from '@/components/experiences/ExperienceQuoteModal'
+import type { ExperienceQuoteData } from '@/components/experiences/ExperienceQuoteModal'
 
 export type OccupancyTier = {
   labelKey: 'packages.ocupacionDoble' | 'packages.ocupacionTriple' | 'packages.ocupacionCuadruple'
@@ -55,8 +58,18 @@ export function PackageDetailContent({
   backgroundImage,
 }: PackageDetailContentProps) {
   const { t } = useTranslation()
+  const [quoteOpen, setQuoteOpen] = useState(false)
   const packageTitle = t(`packages.paquete${packageId}`)
   const diasNoches = `${durationDays} ${t('common.dias')} / ${durationNights} ${t('common.noches')}`
+
+  const packageQuoteData: ExperienceQuoteData = {
+    nombreProducto: packageTitle,
+    tipoElemento: 'Paquete',
+    destino: routeText,
+    duracion: diasNoches,
+    precioRango: `Desde $${priceFrom.toLocaleString('es-MX')} ${t('common.mxn')}`,
+    urlOrigen: typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '',
+  }
 
   return (
     <div className="bg-[#f8f9fa] min-h-screen">
@@ -87,12 +100,13 @@ export function PackageDetailContent({
               <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-5">
                 <div className="text-xs text-white/60 uppercase tracking-widest mb-1">{t('packages.precioDesde')}</div>
                 <div className="font-serif text-3xl font-semibold mb-3">${priceFrom.toLocaleString()} {t('common.mxn')}</div>
-                <Link
-                  href="/tailor-made-trip"
+                <button
+                  type="button"
+                  onClick={() => setQuoteOpen(true)}
                   className="flex items-center justify-center gap-2 w-full bg-[#7B4B2A] hover:bg-[#8B5A36] active:bg-[#6A3F23] text-white text-sm font-semibold uppercase tracking-widest py-3.5 rounded-full transition-all duration-[250ms] border-none shadow-none"
                 >
                   {t('packages.cotizarEstePaquete')}
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -227,12 +241,13 @@ export function PackageDetailContent({
 
           <section className="pt-8 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <Link
-                href="/tailor-made-trip"
+              <button
+                type="button"
+                onClick={() => setQuoteOpen(true)}
                 className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-[#7B4B2A] hover:bg-[#8B5A36] active:bg-[#6A3F23] text-white text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-[250ms] border-none shadow-none"
               >
                 {t('packages.cotizarEstePaquete')} <ArrowRight size={16} />
-              </Link>
+              </button>
               <Link
                 href="/contact"
                 className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-[#0a192f] text-sm font-semibold uppercase tracking-wider px-8 py-4 rounded-full transition-colors shadow-none"
@@ -289,15 +304,17 @@ export function PackageDetailContent({
               <div className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">{t('packages.precioDesde')}</div>
               <div className="font-serif text-3xl text-[#0a192f]">${priceFrom.toLocaleString()} <span className="text-base text-gray-500 font-sans">{t('common.mxn')}</span></div>
             </div>
-            <Link
-              href="/tailor-made-trip"
+            <button
+              type="button"
+              onClick={() => setQuoteOpen(true)}
               className="flex items-center justify-center w-full gap-2 bg-[#7B4B2A] hover:bg-[#8B5A36] active:bg-[#6A3F23] text-white text-sm font-semibold uppercase tracking-widest py-4 rounded-full transition-all duration-[250ms] border-none shadow-none"
             >
               {t('packages.cotizarViaje')} <ArrowRight size={16} />
-            </Link>
+            </button>
           </div>
         </div>
       </div>
+      <ExperienceQuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} experience={packageQuoteData} />
     </div>
   )
 }
