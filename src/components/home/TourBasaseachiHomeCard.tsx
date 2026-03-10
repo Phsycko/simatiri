@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import { MapPin } from 'lucide-react'
 import { TourBasaseachiModal } from '@/components/experiences/TourBasaseachiModal'
+import { ExperienceQuoteModal, buildExperienceQuoteData } from '@/components/experiences/ExperienceQuoteModal'
 import Image from 'next/image'
 import { useTranslation } from '@/contexts/LocaleContext'
 
 export function TourBasaseachiHomeCard({ tour }: { tour: any }) {
     const [isOpen, setIsOpen] = useState(false)
+    const [quoteOpen, setQuoteOpen] = useState(false)
     const [imgSrc, setImgSrc] = useState('/images/destinations/basaseachi.jpg')
     const { t } = useTranslation()
     const basePrice = tour?.tierPrices?.[0]?.pricePerPerson ?? 1500
@@ -39,7 +41,8 @@ export function TourBasaseachiHomeCard({ tour }: { tour: any }) {
                 </div>
             </div>
 
-            <TourBasaseachiModal isOpen={isOpen} setIsOpen={setIsOpen} tour={tour} />
+            <TourBasaseachiModal isOpen={isOpen} setIsOpen={setIsOpen} tour={tour} onRequestQuote={() => { setIsOpen(false); setQuoteOpen(true) }} />
+            <ExperienceQuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} experience={buildExperienceQuoteData(tour)} />
         </>
     )
 }

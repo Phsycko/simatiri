@@ -25,47 +25,61 @@ export const metadata: Metadata = {
   ...buildShareMeta({ title, description, pathname: '/experiences' }),
 }
 
+const hikingPlaceholder = {
+  id: 'hiking-barrancas',
+  title: 'Hiking en Barrancas del Cobre',
+  durationHours: 8,
+  destination: { name: 'Barrancas del Cobre' },
+  tierPrices: [{ id: 'hp1', pricePerPerson: 5000 }],
+  description: 'Vive la sierra a pie: senderos entre cañones, miradores de vértigo y silencio solo roto por el viento.',
+}
+const buceoPlaceholder = {
+  id: 'buceo-mar-cortes',
+  title: 'Buceo en el Mar de Cortés',
+  durationHours: 6,
+  destination: { name: 'Los Mochis' },
+  tierPrices: [{ id: 'bp1', pricePerPerson: 5500 }],
+  description: 'Explora el acuario del mundo: salida desde el puerto de Topolobampo hacia aguas del Mar de Cortés.',
+}
+
+const fallbackTours = [
+  { id: 1, title: 'Tour Tarahumara', durationHours: 5, destination: { name: 'Creel' }, tierPrices: [{ id: 1, pricePerPerson: 1000 }], description: null },
+  { id: 2, title: 'Tour Barrancas del Cobre', durationHours: 5, destination: { name: 'Divisadero' }, tierPrices: [{ id: 2, pricePerPerson: 1000 }], description: null },
+  { id: 3, title: 'Tour Basaseachi', durationHours: 10, destination: { name: 'Creel' }, tierPrices: [{ id: 3, pricePerPerson: 1700 }], description: null },
+  hikingPlaceholder,
+  buceoPlaceholder,
+]
+
 export default async function ExperiencesPage() {
   const cookieStore = await cookies()
   const locale = getLocaleFromCookie(cookieStore.get(LOCALE_COOKIE)?.value)
   const t = getT(locale)
 
-  const tours = await prisma.tour.findMany({
-        include: {
-            destination: true,
-            tierPrices: { orderBy: { minPax: 'asc' } },
-        },
+  let tours: Array<{ id: number | string; title: string; durationHours: number; destination: { name: string }; tierPrices: Array<{ id: number | string; pricePerPerson: number }>; description?: string | null }>
+  try {
+    const data = await prisma.tour.findMany({
+      include: {
+        destination: true,
+        tierPrices: { orderBy: { minPax: 'asc' } },
+      },
     })
+    tours = data
+  } catch (_err) {
+    tours = fallbackTours
+  }
 
-    const hasHiking = tours.some((tour: any) =>
-        tour.title === 'Hiking en Barrancas del Cobre' || tour.title === 'Hiking Barrancas del Cobre'
-    )
-    const hasBuceo = tours.some((tour: any) =>
-        tour.title === 'Buceo en el Mar de Cortés' || tour.title === 'Buceo Mar de Cortés'
-    )
+  const hasHiking = tours.some((tour: any) =>
+    tour.title === 'Hiking en Barrancas del Cobre' || tour.title === 'Hiking Barrancas del Cobre'
+  )
+  const hasBuceo = tours.some((tour: any) =>
+    tour.title === 'Buceo en el Mar de Cortés' || tour.title === 'Buceo Mar de Cortés'
+  )
 
-    const hikingPlaceholder = {
-        id: 'hiking-barrancas',
-        title: 'Hiking en Barrancas del Cobre',
-        durationHours: 8,
-        destination: { name: 'Barrancas del Cobre' },
-        tierPrices: [{ id: 'hp1', pricePerPerson: 5000 }],
-        description: 'Vive la sierra a pie: senderos entre cañones, miradores de vértigo y silencio solo roto por el viento.',
-    }
-    const buceoPlaceholder = {
-        id: 'buceo-mar-cortes',
-        title: 'Buceo en el Mar de Cortés',
-        durationHours: 6,
-        destination: { name: 'Los Mochis' },
-        tierPrices: [{ id: 'bp1', pricePerPerson: 5500 }],
-        description: 'Explora el acuario del mundo: salida desde el puerto de Topolobampo hacia aguas del Mar de Cortés.',
-    }
-
-    const toursToShow = [
-        ...tours,
-        ...(hasHiking ? [] : [hikingPlaceholder]),
-        ...(hasBuceo ? [] : [buceoPlaceholder]),
-    ]
+  const toursToShow = [
+    ...tours,
+    ...(hasHiking ? [] : [hikingPlaceholder]),
+    ...(hasBuceo ? [] : [buceoPlaceholder]),
+  ]
 
     return (
         <>

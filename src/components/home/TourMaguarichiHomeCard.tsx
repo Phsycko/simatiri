@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { MapPin } from 'lucide-react'
 import { TourMaguarichiModal } from '@/components/experiences/TourMaguarichiModal'
+import { ExperienceQuoteModal, buildExperienceQuoteData } from '@/components/experiences/ExperienceQuoteModal'
 import Image from 'next/image';
 
 export function TourMaguarichiHomeCard({ tour }: { tour: any }) {
     const [isOpen, setIsOpen] = useState(false)
+    const [quoteOpen, setQuoteOpen] = useState(false)
     const [imgSrc, setImgSrc] = useState('/images/destinations/creel.jpg') // Defaulting to creel as we might not have a maguarichi img
 
     return (
@@ -35,7 +37,8 @@ export function TourMaguarichiHomeCard({ tour }: { tour: any }) {
                 </div>
             </div>
 
-            <TourMaguarichiModal isOpen={isOpen} setIsOpen={setIsOpen} tour={tour} />
+            <TourMaguarichiModal isOpen={isOpen} setIsOpen={setIsOpen} tour={tour} onRequestQuote={() => { setIsOpen(false); setQuoteOpen(true) }} />
+            <ExperienceQuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} experience={buildExperienceQuoteData(tour)} />
         </>
     )
 }

@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { MapPin } from 'lucide-react'
 import { TourMenonitasModal } from '@/components/experiences/TourMenonitasModal'
+import { ExperienceQuoteModal, buildExperienceQuoteData } from '@/components/experiences/ExperienceQuoteModal'
 import Image from 'next/image';
 
 export function TourMenonitasHomeCard({ tour }: { tour: any }) {
     const [isOpen, setIsOpen] = useState(false)
+    const [quoteOpen, setQuoteOpen] = useState(false)
 
     return (
         <>
@@ -34,7 +36,8 @@ export function TourMenonitasHomeCard({ tour }: { tour: any }) {
                 </div>
             </div>
 
-            <TourMenonitasModal isOpen={isOpen} setIsOpen={setIsOpen} tour={tour} />
+            <TourMenonitasModal isOpen={isOpen} setIsOpen={setIsOpen} tour={tour} onRequestQuote={() => { setIsOpen(false); setQuoteOpen(true) }} />
+            <ExperienceQuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} experience={buildExperienceQuoteData(tour)} />
         </>
     )
 }
