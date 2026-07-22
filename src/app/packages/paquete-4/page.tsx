@@ -6,8 +6,6 @@ export const metadata: Metadata = {
   description: '5 Días / 4 Noches. Chihuahua – Creel – Chihuahua. Hospedaje Categoría Superior.',
 }
 
-const USD = (mxn: number) => Math.round(mxn / 18)
-
 export default function Paquete4Page() {
   return (
     <PackageDetailContent
@@ -22,11 +20,11 @@ export default function Paquete4Page() {
       endPlace="Chihuahua, Chih."
       startNote
       endNote
-      priceFrom={10600}
+      priceFrom={10100}
       occupancyTiers={[
-        { labelKey: 'packages.ocupacionDoble', priceMxn: 12400, priceUsd: USD(12400) },
-        { labelKey: 'packages.ocupacionTriple', priceMxn: 11200, priceUsd: USD(11200) },
-        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 10600, priceUsd: USD(10600) },
+        { labelKey: 'packages.ocupacionDoble', priceMxn: 11400, priceUsd: 635 },
+        { labelKey: 'packages.ocupacionTriple', priceMxn: 10200, priceUsd: 565 },
+        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 10100, priceUsd: 560 },
       ]}
       destinations={[
         { name: 'Ciudad Chihuahua' },

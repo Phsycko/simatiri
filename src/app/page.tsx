@@ -38,13 +38,13 @@ export default async function HomePage() {
     { icon: Users, label: t('home.highlightAgencias'), sub: t('home.highlightAgenciasSub') },
   ]
 
-  let packages: Array<{ id: number; title: string; durationDays: number; trainClass: string | null; prices: Array<{ pricePerPerson: number }> }>
+  let packages: Array<{ id: number; title: string; durationDays: number; trainClass: string | null; prices: Array<{ pricePerPerson: number; isUpgrade?: boolean | null }> }>
   let tours: Array<{ id: number; title: string; durationHours: number; tierPrices: Array<{ pricePerPerson: number }> }>
 
   try {
     const [packagesData, toursData] = await Promise.all([
       prisma.package.findMany({
-        include: { prices: { where: { occupancyType: 'DOBLE', isUpgrade: false } } },
+        include: { prices: { where: { isUpgrade: false } } },
         orderBy: { id: 'asc' },
         take: 3,
       }),
@@ -57,9 +57,9 @@ export default async function HomePage() {
     tours = toursData
   } catch (_err) {
     packages = [
-      { id: 1, title: 'Paquete 1', durationDays: 7, trainClass: 'CHEPE EXPRESS PRIMERA CLASE', prices: [{ pricePerPerson: 27700 }] },
-      { id: 2, title: 'Paquete 2', durationDays: 6, trainClass: 'CHEPE REGIONAL', prices: [{ pricePerPerson: 10400 }] },
-      { id: 3, title: 'Paquete 3', durationDays: 5, trainClass: 'CHEPE REGIONAL', prices: [{ pricePerPerson: 8350 }] },
+      { id: 1, title: 'Paquete 1', durationDays: 7, trainClass: 'CHEPE EXPRESS PRIMERA CLASE', prices: [{ pricePerPerson: 24000 }] },
+      { id: 2, title: 'Paquete 2', durationDays: 6, trainClass: 'CHEPE REGIONAL', prices: [{ pricePerPerson: 10100 }] },
+      { id: 3, title: 'Paquete 3', durationDays: 5, trainClass: 'CHEPE REGIONAL', prices: [{ pricePerPerson: 8400 }] },
     ]
     tours = [
       { id: 1, title: 'Tour Tarahumara', durationHours: 5, tierPrices: [{ pricePerPerson: 1000 }] },
@@ -172,6 +172,8 @@ export default async function HomePage() {
             const isExpressPrimera = trainClassRaw.includes('EXPRESS') && trainClassRaw.includes('PRIMERA')
             const displayTrainClass = isExpressPrimera ? t('packages.trainClassExpressPrimera') : t('packages.trainClassRegional')
             const displayTitle = t(`packages.paquete${pkg.id}`) !== `packages.paquete${pkg.id}` ? t(`packages.paquete${pkg.id}`) : pkg.title
+            const basePrices = (pkg.prices ?? []).filter((p: any) => !p?.isUpgrade)
+            const priceFrom = basePrices.length > 0 ? Math.min(...basePrices.map((p: any) => Number(p.pricePerPerson ?? 0))) : 0
             return (
             <Link
               href={(() => {
@@ -221,7 +223,7 @@ export default async function HomePage() {
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">{pkg.durationDays} {t('common.dias')}</span>
                 <span className="font-semibold text-[#0a192f]">
-                  {t('home.desdeMxn')} ${pkg.prices[0]?.pricePerPerson?.toLocaleString()} {t('common.mxn')}
+                  {t('home.desdeMxn')} ${priceFrom.toLocaleString()} {t('common.mxn')}
                 </span>
               </div>
             </Link>

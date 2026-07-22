@@ -7,7 +7,7 @@ import { Train, MapPin, Users, Info, ShieldCheck } from 'lucide-react'
 // Dummy Data from Business Rules Phase 5
 const packages = [
     { id: 1, title: 'Paquete 1: El Fuerte → Creel → El Fuerte', days: 7, train: 'CHEPE EXPRESS', priceDoble: 27700, priceTriple: 25400 },
-    { id: 2, title: 'Paquete 2: Chihuahua → Creel → Divisadero', days: 6, train: 'CHEPE REGIONAL', priceDoble: 10400, priceTriple: 9470, upgradeExpressDoble: 11400 },
+    { id: 2, title: 'Paquete 2: Chihuahua → Creel → Divisadero', days: 6, train: 'CHEPE REGIONAL', priceDoble: 11400, priceTriple: 10470, upgradeExpressDoble: 12400 },
     { id: 4, title: 'Paquete 4: Barrancas Rápidas', days: 5, train: 'CHEPE EXPRESS', priceDoble: 11400, priceTriple: 10200 },
 ]
 

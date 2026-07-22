@@ -20,16 +20,16 @@ export default function Paquete3Page() {
       endPlace="Chihuahua, Chih."
       startNote
       endNote
-      priceFrom={7400}
+      priceFrom={8400}
       occupancyTiers={[
-        { labelKey: 'packages.ocupacionDoble', priceMxn: 8350, priceUsd: 465 },
-        { labelKey: 'packages.ocupacionTriple', priceMxn: 7710, priceUsd: 430 },
-        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 7400, priceUsd: 410 },
+        { labelKey: 'packages.ocupacionDoble', priceMxn: 9350, priceUsd: 520 },
+        { labelKey: 'packages.ocupacionTriple', priceMxn: 8710, priceUsd: 484 },
+        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 8400, priceUsd: 467 },
       ]}
       upgradeTiers={[
-        { labelKey: 'packages.ocupacionDoble', priceMxn: 9300, priceUsd: 515 },
-        { labelKey: 'packages.ocupacionTriple', priceMxn: 8700, priceUsd: 485 },
-        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 8400, priceUsd: 465 },
+        { labelKey: 'packages.ocupacionDoble', priceMxn: 10300, priceUsd: 573 },
+        { labelKey: 'packages.ocupacionTriple', priceMxn: 9700, priceUsd: 540 },
+        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 9400, priceUsd: 523 },
       ]}
       destinations={[
         { name: 'Ciudad Chihuahua' },

@@ -53,12 +53,12 @@ async function main() {
             endLocation: 'Divisadero',
             description: 'Chihuahua → Creel → Divisadero. Hospedaje: Categoría Intermedia',
             prices: [
-                { occupancyType: 'DOBLE', pricePerPerson: 10400, isUpgrade: false },
-                { occupancyType: 'TRIPLE', pricePerPerson: 9470, isUpgrade: false },
-                { occupancyType: 'CUADRUPLE', pricePerPerson: 9100, isUpgrade: false },
-                { occupancyType: 'DOBLE', pricePerPerson: 11400, isUpgrade: true },
-                { occupancyType: 'TRIPLE', pricePerPerson: 10440, isUpgrade: true },
-                { occupancyType: 'CUADRUPLE', pricePerPerson: 10070, isUpgrade: true }
+                { occupancyType: 'DOBLE', pricePerPerson: 11400, isUpgrade: false },
+                { occupancyType: 'TRIPLE', pricePerPerson: 10470, isUpgrade: false },
+                { occupancyType: 'CUADRUPLE', pricePerPerson: 10100, isUpgrade: false },
+                { occupancyType: 'DOBLE', pricePerPerson: 12400, isUpgrade: true },
+                { occupancyType: 'TRIPLE', pricePerPerson: 11440, isUpgrade: true },
+                { occupancyType: 'CUADRUPLE', pricePerPerson: 11070, isUpgrade: true }
             ]
         },
         {
@@ -67,12 +67,12 @@ async function main() {
             trainClass: 'CHEPE REGIONAL',
             description: '5 días / 4 noches',
             prices: [
-                { occupancyType: 'DOBLE', pricePerPerson: 8350, isUpgrade: false },
-                { occupancyType: 'TRIPLE', pricePerPerson: 7710, isUpgrade: false },
-                { occupancyType: 'CUADRUPLE', pricePerPerson: 7400, isUpgrade: false },
-                { occupancyType: 'DOBLE', pricePerPerson: 9300, isUpgrade: true },
-                { occupancyType: 'TRIPLE', pricePerPerson: 8700, isUpgrade: true },
-                { occupancyType: 'CUADRUPLE', pricePerPerson: 8400, isUpgrade: true }
+                { occupancyType: 'DOBLE', pricePerPerson: 9350, isUpgrade: false },
+                { occupancyType: 'TRIPLE', pricePerPerson: 8710, isUpgrade: false },
+                { occupancyType: 'CUADRUPLE', pricePerPerson: 8400, isUpgrade: false },
+                { occupancyType: 'DOBLE', pricePerPerson: 10300, isUpgrade: true },
+                { occupancyType: 'TRIPLE', pricePerPerson: 9700, isUpgrade: true },
+                { occupancyType: 'CUADRUPLE', pricePerPerson: 9400, isUpgrade: true }
             ]
         },
         {
@@ -90,12 +90,12 @@ async function main() {
             durationDays: 4,
             trainClass: 'CHEPE REGIONAL',
             prices: [
-                { occupancyType: 'DOBLE', pricePerPerson: 7780, isUpgrade: false },
-                { occupancyType: 'TRIPLE', pricePerPerson: 7400, isUpgrade: false },
-                { occupancyType: 'CUADRUPLE', pricePerPerson: 7200, isUpgrade: false },
-                { occupancyType: 'DOBLE', pricePerPerson: 8850, isUpgrade: true },
-                { occupancyType: 'TRIPLE', pricePerPerson: 8400, isUpgrade: true },
-                { occupancyType: 'CUADRUPLE', pricePerPerson: 8150, isUpgrade: true }
+                { occupancyType: 'DOBLE', pricePerPerson: 8380, isUpgrade: false },
+                { occupancyType: 'TRIPLE', pricePerPerson: 7900, isUpgrade: false },
+                { occupancyType: 'CUADRUPLE', pricePerPerson: 7700, isUpgrade: false },
+                { occupancyType: 'DOBLE', pricePerPerson: 9350, isUpgrade: true },
+                { occupancyType: 'TRIPLE', pricePerPerson: 8900, isUpgrade: true },
+                { occupancyType: 'CUADRUPLE', pricePerPerson: 8650, isUpgrade: true }
             ]
         },
         {

@@ -20,24 +20,79 @@ const ROUTES: Record<number, string> = {
   17: 'El Fuerte → Creel → El Fuerte',
 }
 
-const PRICES: Record<number, { pricePerPerson: number; occupancyType: string }[]> = {
-  5: [{ occupancyType: 'DOBLE', pricePerPerson: 8200 }, { occupancyType: 'TRIPLE', pricePerPerson: 7500 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 7100 }],
-  6: [{ occupancyType: 'DOBLE', pricePerPerson: 10800 }, { occupancyType: 'TRIPLE', pricePerPerson: 9900 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 9400 }],
-  7: [{ occupancyType: 'DOBLE', pricePerPerson: 6900 }, { occupancyType: 'TRIPLE', pricePerPerson: 6300 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 6000 }],
-  8: [{ occupancyType: 'DOBLE', pricePerPerson: 9200 }, { occupancyType: 'TRIPLE', pricePerPerson: 8400 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 8000 }],
-  9: [{ occupancyType: 'DOBLE', pricePerPerson: 11500 }, { occupancyType: 'TRIPLE', pricePerPerson: 10500 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 9900 }],
-  10: [{ occupancyType: 'DOBLE', pricePerPerson: 8900 }, { occupancyType: 'TRIPLE', pricePerPerson: 8100 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 7700 }],
-  11: [{ occupancyType: 'DOBLE', pricePerPerson: 10200 }, { occupancyType: 'TRIPLE', pricePerPerson: 9300 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 8800 }],
-  12: [{ occupancyType: 'DOBLE', pricePerPerson: 9800 }, { occupancyType: 'TRIPLE', pricePerPerson: 9000 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 8500 }],
-  13: [{ occupancyType: 'DOBLE', pricePerPerson: 13200 }, { occupancyType: 'TRIPLE', pricePerPerson: 12100 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 11500 }],
-  14: [{ occupancyType: 'DOBLE', pricePerPerson: 15800 }, { occupancyType: 'TRIPLE', pricePerPerson: 14500 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 13800 }],
-  15: [{ occupancyType: 'DOBLE', pricePerPerson: 12800 }, { occupancyType: 'TRIPLE', pricePerPerson: 11700 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 11100 }],
-  16: [{ occupancyType: 'DOBLE', pricePerPerson: 11200 }, { occupancyType: 'TRIPLE', pricePerPerson: 10200 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 9700 }],
-  17: [{ occupancyType: 'DOBLE', pricePerPerson: 9800 }, { occupancyType: 'TRIPLE', pricePerPerson: 9000 }, { occupancyType: 'CUADRUPLE', pricePerPerson: 8500 }],
+const PRICES: Record<number, { priceMxn: number; priceUsd: number; occupancyType: string; isUpgrade?: boolean }[]> = {
+  5: [
+    { occupancyType: 'DOBLE', priceMxn: 8380, priceUsd: 466 },
+    { occupancyType: 'TRIPLE', priceMxn: 7900, priceUsd: 440 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 7700, priceUsd: 428 },
+    { occupancyType: 'DOBLE', priceMxn: 9350, priceUsd: 520, isUpgrade: true },
+    { occupancyType: 'TRIPLE', priceMxn: 8900, priceUsd: 495, isUpgrade: true },
+    { occupancyType: 'CUADRUPLE', priceMxn: 8650, priceUsd: 481, isUpgrade: true },
+  ],
+  6: [
+    { occupancyType: 'DOBLE', priceMxn: 10350, priceUsd: 575 },
+    { occupancyType: 'TRIPLE', priceMxn: 9550, priceUsd: 530 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 9200, priceUsd: 510 },
+  ],
+  7: [
+    { occupancyType: 'DOBLE', priceMxn: 7400, priceUsd: 410 },
+    { occupancyType: 'TRIPLE', priceMxn: 7100, priceUsd: 395 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 6950, priceUsd: 385 },
+  ],
+  8: [
+    { occupancyType: 'DOBLE', priceMxn: 9250, priceUsd: 515 },
+    { occupancyType: 'TRIPLE', priceMxn: 8800, priceUsd: 485 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 8550, priceUsd: 475 },
+  ],
+  9: [
+    { occupancyType: 'DOBLE', priceMxn: 8700, priceUsd: 485 },
+    { occupancyType: 'TRIPLE', priceMxn: 8350, priceUsd: 465 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 8200, priceUsd: 455 },
+  ],
+  10: [
+    { occupancyType: 'DOBLE', priceMxn: 9200, priceUsd: 510 },
+    { occupancyType: 'TRIPLE', priceMxn: 8700, priceUsd: 485 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 8500, priceUsd: 475 },
+  ],
+  11: [
+    { occupancyType: 'DOBLE', priceMxn: 10900, priceUsd: 605 },
+    { occupancyType: 'TRIPLE', priceMxn: 10100, priceUsd: 560 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 9700, priceUsd: 535 },
+  ],
+  12: [
+    { occupancyType: 'DOBLE', priceMxn: 13200, priceUsd: 735 },
+    { occupancyType: 'TRIPLE', priceMxn: 12150, priceUsd: 675 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 11600, priceUsd: 645 },
+  ],
+  13: [
+    { occupancyType: 'DOBLE', priceMxn: 18250, priceUsd: 1010 },
+    { occupancyType: 'TRIPLE', priceMxn: 16580, priceUsd: 920 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 15790, priceUsd: 875 },
+  ],
+  14: [
+    { occupancyType: 'DOBLE', priceMxn: 10100, priceUsd: 560 },
+    { occupancyType: 'TRIPLE', priceMxn: 9500, priceUsd: 525 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 9240, priceUsd: 515 },
+  ],
+  15: [
+    { occupancyType: 'DOBLE', priceMxn: 12400, priceUsd: 685 },
+    { occupancyType: 'TRIPLE', priceMxn: 12150, priceUsd: 675 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 11750, priceUsd: 655 },
+  ],
+  16: [
+    { occupancyType: 'DOBLE', priceMxn: 11650, priceUsd: 645 },
+    { occupancyType: 'TRIPLE', priceMxn: 10850, priceUsd: 605 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 10450, priceUsd: 580 },
+  ],
+  17: [
+    { occupancyType: 'DOBLE', priceMxn: 9960, priceUsd: 555 },
+    { occupancyType: 'TRIPLE', priceMxn: 9500, priceUsd: 525 },
+    { occupancyType: 'CUADRUPLE', priceMxn: 9240, priceUsd: 515 },
+  ],
 }
 
 const DURATION: Record<number, number> = {
-  5: 4, 6: 4, 7: 3, 8: 3, 9: 5, 10: 4, 11: 4, 12: 5, 13: 7, 14: 5, 15: 4, 16: 4, 17: 4,
+  5: 4, 6: 4, 7: 3, 8: 3, 9: 3, 10: 4, 11: 4, 12: 5, 13: 7, 14: 5, 15: 4, 16: 4, 17: 4,
 }
 
 const TRAIN_CLASS: Record<number, 'packages.trainClassExpressPrimera' | 'packages.trainClassRegional'> = {
@@ -103,18 +158,22 @@ function getStartEnd(id: number): { startPlace: string; endPlace: string; startN
   }
 }
 
-const USD = (mxn: number) => Math.round(mxn / 18)
-
 export function getPackageDetailProps(id: number): Omit<PackageDetailContentProps, 'packageId'> & { packageId: number } {
   const durationDays = DURATION[id] ?? 4
   const durationNights = durationDays - 1
   const prices = PRICES[id] ?? []
-  const basePrices = prices.filter((p) => !('isUpgrade' in p && p.isUpgrade))
-  const priceFrom = basePrices.length ? Math.min(...basePrices.map((p) => p.pricePerPerson)) : 0
+  const basePrices = prices.filter((p) => !p.isUpgrade)
+  const upgradePrices = prices.filter((p) => p.isUpgrade)
+  const priceFrom = basePrices.length ? Math.min(...basePrices.map((p) => p.priceMxn)) : 0
   const occupancyTiers = basePrices.map((p) => ({
     labelKey: p.occupancyType === 'DOBLE' ? 'packages.ocupacionDoble' as const : p.occupancyType === 'TRIPLE' ? 'packages.ocupacionTriple' as const : 'packages.ocupacionCuadruple' as const,
-    priceMxn: p.pricePerPerson,
-    priceUsd: USD(p.pricePerPerson),
+    priceMxn: p.priceMxn,
+    priceUsd: p.priceUsd,
+  }))
+  const upgradeTiers = upgradePrices.map((p) => ({
+    labelKey: p.occupancyType === 'DOBLE' ? 'packages.ocupacionDoble' as const : p.occupancyType === 'TRIPLE' ? 'packages.ocupacionTriple' as const : 'packages.ocupacionCuadruple' as const,
+    priceMxn: p.priceMxn,
+    priceUsd: p.priceUsd,
   }))
   const { startPlace, endPlace, startNote, endNote } = getStartEnd(id)
   const isExpress = TRAIN_CLASS[id] === 'packages.trainClassExpressPrimera'
@@ -132,6 +191,7 @@ export function getPackageDetailProps(id: number): Omit<PackageDetailContentProp
     endNote,
     priceFrom,
     occupancyTiers,
+    upgradeTiers,
     destinations: getDestinations(id),
     backgroundImage: id === 1 ? '/images/paquetes/paquete-1-hero.jpg' : `/images/packages/package-${id}.jpg`,
   }

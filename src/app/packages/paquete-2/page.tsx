@@ -20,16 +20,16 @@ export default function Paquete2Page() {
       endPlace="Divisadero"
       startNote
       endNote={false}
-      priceFrom={9100}
+      priceFrom={10100}
       occupancyTiers={[
-        { labelKey: 'packages.ocupacionDoble', priceMxn: 10400, priceUsd: 580 },
-        { labelKey: 'packages.ocupacionTriple', priceMxn: 9470, priceUsd: 525 },
-        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 9100, priceUsd: 505 },
+        { labelKey: 'packages.ocupacionDoble', priceMxn: 11400, priceUsd: 635 },
+        { labelKey: 'packages.ocupacionTriple', priceMxn: 10470, priceUsd: 582 },
+        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 10100, priceUsd: 562 },
       ]}
       upgradeTiers={[
-        { labelKey: 'packages.ocupacionDoble', priceMxn: 11400, priceUsd: 635 },
-        { labelKey: 'packages.ocupacionTriple', priceMxn: 10440, priceUsd: 580 },
-        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 10070, priceUsd: 560 },
+        { labelKey: 'packages.ocupacionDoble', priceMxn: 12400, priceUsd: 690 },
+        { labelKey: 'packages.ocupacionTriple', priceMxn: 11440, priceUsd: 636 },
+        { labelKey: 'packages.ocupacionCuadruple', priceMxn: 11070, priceUsd: 615 },
       ]}
       destinations={[
         { name: 'Ciudad Chihuahua' },
